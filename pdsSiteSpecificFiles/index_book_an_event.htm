@@ -1,0 +1,227 @@
+<?php
+
+
+   $todayAsString = date('Y-m-d'); 
+   $query = "select * from lk_occurrences where type='special_event' and start_day > '$todayAsString' order by id"; 
+   $bookings = $controller->command("databaseFetchSqlWithTrust", $query, "page_booking_second.htm"); 
+
+?>
+
+
+
+
+
+
+<div class="container">
+  <br>
+  <?php echo $controller->command("showUserMessages"); ?>  
+  <br>
+</div>
+
+
+
+<div class="std">
+
+  <div class="parlor_public_forms">
+
+    <table  cellpadding='15' cellspacing='0' border='0'  bgcolor="#151515" width=995 height="1500">
+      <tr>
+	<td width="550" valign="top">
+	  <table  cellpadding='15' cellspacing='0' border='0' bgcolor="#151515">
+	    <tr>
+	      <td valign="top">		
+
+		<table >
+		  <tr height="65">
+		  </tr>
+		  <tr >
+		    <td width="180">
+		    </td>
+
+		    <td>
+
+		      <div class="mbr">
+
+			<div class="parlor_public_forms">
+
+
+
+
+
+
+
+
+
+			  <form id="parlor_book_an_event_form" action="/parlor.php?page=index_book_an_event" method="post">
+
+			    <input class="text"  type="hidden" name="choiceMade[]" value="parlorBookAnEventSave" />
+
+			    <input  class="text booking_input" placeholder="First name" type="text" name="booking[first_name]">
+
+			    <input  class="text booking_input" placeholder="Last name" type="text" name="booking[last_name]">
+
+			    <input  class="text booking_input" placeholder="Email" type="text" name="booking[email]">
+
+			    <input  class="text booking_input" placeholder="Phone number" type="text" name="booking[phone]">
+
+			    <div class="indent_this_question">
+
+			      <p>Are you booking this event on behalf of an organization? </p>
+
+			      <div class="radio_button_and_its_question_text"> 			      
+				<input class="text booking_radio" type="radio" placeholder="For an organization?" value="Yes" onclick="document.getElementById('booking_organization').style.display='block';"> Yes
+			      </div>
+
+			      <div class="radio_button_and_its_question_text">
+				<input class="text booking_radio" type="radio" placeholder="For an organization?" value="No"  onclick="document.getElementById('booking_organization').style.display='none';"> No
+			      </div>
+
+			      <input id="booking_organization" style="display:none;" class="text booking_input" placeholder="Which organization?" type="text" name="booking[organization]">
+			    </div>
+
+			    <input id="ideal_date_for_this_event" class="text booking_input" placeholder="Ideal date for your event?" type="text" name="booking[start_day]">
+			    <script>
+			      $(function() {
+			      $( "#ideal_date_for_this_event" ).datepicker({ dateFormat: "yy-mm-dd" });
+			      });
+			    </script>
+
+			    <div class="indent_this_question">
+
+			      <p>Can You Be Flexible Regarding The Date? </p>
+
+			      <div class="radio_button_and_its_question_text">
+ 				<input class="text booking_radio" type="radio" placeholder="For an Can you be flexible regarding the date?" value="Yes" onclick="$('#booking_flexibility_regarding_dates').css('display', 'block');"> Yes
+			      </div>
+
+			      <div class="radio_button_and_its_question_text">
+				<input class="text booking_radio" type="radio" placeholder="For an Can you be flexible regarding the date?" value="No" onclick="$('#booking_flexibility_regarding_dates').css('display', 'none');"> No
+			      </div>
+
+			      <input id="booking_flexibility_regarding_dates" class="text booking_input"  style="display:none;"  placeholder="What range of dates would work for you?" type="text" name="booking[flexibility_regarding_dates]">
+
+			    </div>
+			    
+			    <input  class="text booking_input" placeholder="How many guests are you expecting?" type="text" name="booking[how_many_guests_are_you_expecting]">
+			    
+			    <input  class="text booking_input" placeholder="What is the total budget for this event?" type="text" name="booking[what_is_the_total_budget_for_this_event]">
+
+
+
+			    <div class="indent_this_question">
+
+			      <p>Do you plan on serving food? </p>
+
+			      <div class="radio_button_and_its_question_text">
+ 				<input class="text booking_radio" type="radio" placeholder="Yes" value="Yes" onclick="$('.booking_do_you_plan_on_serving_food').css('display', 'block');"> Yes
+			      </div>
+
+			      <div class="radio_button_and_its_question_text">
+				<input class="text booking_radio" type="radio" placeholder="No" value="No"  onclick="$('.booking_do_you_plan_on_serving_food').css('display', 'none');"> No
+			      </div>
+
+			      <div class="booking_do_you_plan_on_serving_food" style="display:none; padding: 0 0 0 25px;">
+
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="Passed appetizers" value="Passed appetizers" type="text" name="booking[do_you_plan_on_serving_food]"> Passed appetizers
+			      </div>
+
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="Sit down a la carte dinner" value="Sit down a la carte dinner" type="text" name="booking[do_you_plan_on_serving_food]"> Sit down a la carte dinner
+			      </div>
+
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="Sit down small plate tasting menu" value="Sit down small plate tasting menu" type="text" name="booking[do_you_plan_on_serving_food]"> Sit down small plate tasting menu
+			      </div>
+
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="Buffet" value="Buffet" type="text" name="booking[do_you_plan_on_serving_food]"> Buffet
+			      </div>
+			      
+			    </div>
+			      
+			    </div>
+
+
+			    <div class="indent_this_question">
+
+			      <p>What are your bar preferences? </p>
+
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="Cash bar" value="Cash bar" type="text" name="booking[bar_preferences]"> Cash bar
+			      </div>
+			      
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="Open bar" value="Open bar" type="text" name="booking[bar_preferences]"> Open bar		    
+			      </div>
+
+			    </div>
+
+			    <div class="indent_this_question">
+			      
+			      <p>Do you need a DJ?  </p>
+
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="Yes, and I will provide the DJ" value="Yes, and I will provide the DJ" type="text" name="booking[do_you_need_a_dj]"> Yes, and I will provide the DJ  
+			      </div>
+
+
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="Yes, and I need you to provide the DJ" value="Yes, and I need you to provide the DJ" type="text" name="booking[do_you_need_a_dj]"> Yes, and I need you to provide the DJ
+			      </div>
+
+
+			      <div class="radio_button_and_its_question_text">
+				<input type="radio" class="booking_do_you_plan_on_serving_food text booking_radio" placeholder="No, I do not need a DJ" value="No, I do not need a DJ" type="text" name="booking[do_you_need_a_dj]"> No, I do not need a DJ
+			      </div>
+
+			    </div>
+
+
+			    <input  class="text booking_input" placeholder="How Did You Hear About Parlor" type="text" name="booking[how_did_you_hear_about_parlor]">
+
+
+			    <div class="nominate-notes hidden-textarea">
+			      <textarea class="booking_textarea" placeholder="Any other special arrangements you need help with for this event" name="booking[any_other_special_arrangements_you_need_help_with_for_this_event]"></textarea>
+			    </div>
+
+
+
+
+
+
+			    <input type="hidden" name="booking[only_stupid_bots_will_ever_fill_this_input" value="">
+
+			    <p style="clear:both;"><a href="#" data-hover="Book an event" class="button-custom" onclick="document.getElementById('parlor_book_an_event_form').submit(); return false;"><span>Book an event</span></a></p>
+
+			  </form>
+
+
+
+
+			</div>
+
+		      </div>
+
+		    </td>
+		  </tr>
+		</table>
+
+	      </td>
+	    </tr>
+	  </table>
+	</td>
+
+      </tr>
+    </table>
+
+
+  </div>
+
+
+
+
+</div>
+
+
+

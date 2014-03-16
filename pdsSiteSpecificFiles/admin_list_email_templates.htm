@@ -1,0 +1,22 @@
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "SELECT * FROM lk_email_templates order by id", "admin_list_email_templates.htm"); ?>
+
+
+
+
+
+<?php echo $controller->command("showUserMessages"); ?>
+
+
+
+<div class="container">
+
+
+<?php foreach($items as $i): ?>
+   <h5><a href="/admin.php?page=admin_edit_email_templates&editId=<?php echo $i["id"]; ?>">Subject: <?php echo $i["subject"]; ?></a></h5>
+   <p>What type of email is this: <?php echo $i["what_type_of_email_is_this"]; ?></p>
+   <br>
+<?php endforeach ?>
+
+
+
+</div>

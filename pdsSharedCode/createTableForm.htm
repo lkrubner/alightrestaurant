@@ -1,0 +1,169 @@
+
+	
+<script type="text/javascript">	
+	var globalIntegerOfNextField = 3; 
+	function addNewInputForAnotherField() {
+		var stringOfHtml = "";
+		stringOfHtml += "<br /> <br />   <p>Type:  <select id='select" + globalIntegerOfNextField + "' name='fieldsToCreate[" + globalIntegerOfNextField + "][type]'> \n";
+		stringOfHtml += "<option value='varchar'>A variable length string (varchar)</option>\n";
+		stringOfHtml += "<option value='char'>A fixed length string, often a checkbox (char)</option>\n";
+		stringOfHtml += "<option value='text'>A block of text, up to 64k, often in a textarea (text)</option>\n";
+		stringOfHtml += "<option value='mediumtext'>A large block of text, up to 16 megs (mediumtext)</option>\n";
+		stringOfHtml += "<option value='timestamp'>The time, in seconds (timestamp)</option>\n";
+		stringOfHtml += "<option value='date'>The date as Year-Month-Date (date)</option>\n";
+		stringOfHtml += "<option value='datetime'>The date as Year-Month-Date Hours-Minutes-Seconds (datetime)</option>\n";
+		stringOfHtml += "<option value='int'>A whole number (integer)</option>\n";
+		stringOfHtml += "<option value='float'>Decimal numbers that are rounded off (float)</option>\n";
+		stringOfHtml += "<option value='decimal'>Decimal numbers that are precise and do not round off (decimal)</option>\n";
+		stringOfHtml += "</select> \n";
+		stringOfHtml += "Name:  <input id='name" + globalIntegerOfNextField + "' type='text' name='fieldsToCreate[" + globalIntegerOfNextField + "][name]' /></p>\n";
+
+		// 11-07-06 - sadly, this function perserves the HTML in the div with id of "fieldInputs" but
+		// it blanks all the values. So this next loop will perserve all the values, and then at the 
+		// end we will write them back into the inputs. I'm picking the number 50 as an arbitrary number
+		// that I assume no table will ever actually reach. 
+		var arrayOfValuesForTheSelectInputs = new Array(); 
+		for (var i=0; i < 50; i++) {
+			var idToGet = "select" + i; 
+			if (document.getElementById(idToGet)) {
+				var referenceToInput = document.getElementById(idToGet); 
+				arrayOfValuesForTheSelectInputs[i] = referenceToInput.value; 
+			}
+		}
+		var arrayOfValuesForTheNameInputs = new Array(); 
+		for (var i=0; i < 50; i++) {
+			var idToGet = "name" + i; 
+			if (document.getElementById(idToGet)) {
+				var referenceToInput = document.getElementById(idToGet); 
+				arrayOfValuesForTheNameInputs[i] = referenceToInput.value; 
+			}
+		}
+		var arrayOfValuesForTheDefaultValueInputs = new Array(); 
+		for (var i=0; i < 50; i++) {
+			var idToGet = "defaultValues" + i; 
+			if (document.getElementById(idToGet)) {
+				var referenceToInput = document.getElementById(idToGet); 
+				arrayOfValuesForTheDefaultValueInputs[i] = referenceToInput.value; 
+			}
+		}
+	
+		var referenceToDivThatHoldsInputs = document.getElementById("fieldInputs"); 
+		var htmlAlreadyInTheInputDiv = referenceToDivThatHoldsInputs.innerHTML; 
+		htmlAlreadyInTheInputDiv += stringOfHtml; 
+		document.getElementById("fieldInputs").innerHTML = htmlAlreadyInTheInputDiv;
+	
+		for (var i=0; i < 50; i++) {
+			var idToGet = "select" + i; 
+			if (document.getElementById(idToGet)) {
+				var referenceToInput = document.getElementById(idToGet); 
+				var inputValue = arrayOfValuesForTheSelectInputs[i];
+				if (inputValue != undefined) referenceToInput.value = inputValue;
+			}
+		}
+		for (var i=0; i < 50; i++) {
+			var idToGet = "name" + i; 
+			if (document.getElementById(idToGet)) {
+				var referenceToInput = document.getElementById(idToGet); 
+				var inputValue = arrayOfValuesForTheNameInputs[i];
+				if (inputValue != undefined) referenceToInput.value = inputValue;
+			}
+		}
+		for (var i=0; i < 50; i++) {
+			var idToGet = "defaultValues" + i; 
+			if (document.getElementById(idToGet)) {
+				var referenceToInput = document.getElementById(idToGet); 
+				var inputValue = arrayOfValuesForTheDefaultValueInputs[i];
+				if (inputValue != undefined) referenceToInput.value = inputValue;
+			}
+		}
+
+		globalIntegerOfNextField = globalIntegerOfNextField + 1; 
+	}
+</script>
+
+
+
+
+
+<form method="post" action="index.php">
+
+<h4>You can use this form to create a database table</h4>
+
+<p>An auto-incrementing primary key field called "id" is added automatically, so don't add it yourself.</p>
+
+<p>If you add a field called "private" then the user will have power to control whether something is private. A value of "t" for true will make an entry private.</p>
+
+<p>If you add a field called "upload_file" then the forms created will allow for a file to be uploaded file (like an image or pdf)</p>
+
+<p>If you want your records to have a headlines or a caption, use the name "title" for the field.</p>
+
+<p><input type="submit" value="Create Table" /></p>
+
+<br /> <br /> <p>Name of table: <input type="text" name="nameOfTable" /></p>
+
+<div id="fieldInputs">
+
+
+<br /> <br />   <p>Type:  <select id='select0' name="fieldsToCreate[0][type]">
+		<option value='varchar'>A variable length string (varchar)</option>
+		<option value='char'>A fixed length string, often a checkbox (char)</option>
+		<option value='text'>A block of text, up to 64k, often in a textarea (text)</option>
+		<option value='mediumtext'>A large block of text, up to 16 megs (mediumtext)</option>
+		<option value='timestamp'>The time, in seconds (timestamp)</option>
+		<option value='date'>The date as Year-Month-Date (date)</option>
+		<option value='datetime'>The date as Year-Month-Date Hours-Minutes-Seconds (datetime)</option>
+		<option value='int'>A whole number (integer)</option>
+		<option value='float'>Decimal numbers that are rounded off (float)</option>
+		<option value='decimal'>Decimal numbers that are precise and do not round off (decimal)</option>
+</select> 
+Name:  <input id='name0' type="text" name="fieldsToCreate[0][name]" /></p>
+
+
+
+<br /> <br />     <p>Type:  <select id='select1' name="fieldsToCreate[1][type]">
+		<option value='varchar'>A variable length string (varchar)</option>
+		<option value='char'>A fixed length string, often a checkbox (char)</option>
+		<option value='text'>A block of text, up to 64k, often in a textarea (text)</option>
+		<option value='mediumtext'>A large block of text, up to 16 megs (mediumtext)</option>
+		<option value='timestamp'>The time, in seconds (timestamp)</option>
+		<option value='date'>The date as Year-Month-Date (date)</option>
+		<option value='datetime'>The date as Year-Month-Date Hours-Minutes-Seconds (datetime)</option>
+		<option value='int'>A whole number (integer)</option>
+		<option value='float'>Decimal numbers that are rounded off (float)</option>
+		<option value='decimal'>Decimal numbers that are precise and do not round off (decimal)</option>
+</select> 
+Name:  <input id='name1' type="text" name="fieldsToCreate[1][name]" /></p>
+
+
+
+<br /> <br />     <p>Type:  <select id='select2' name="fieldsToCreate[2][type]">
+		<option value='varchar'>A variable length string (varchar)</option>
+		<option value='char'>A fixed length string, often a checkbox (char)</option>
+		<option value='text'>A block of text, up to 64k, often in a textarea (text)</option>
+		<option value='mediumtext'>A large block of text, up to 16 megs (mediumtext)</option>
+		<option value='timestamp'>The time, in seconds (timestamp)</option>
+		<option value='date'>The date as Year-Month-Date (date)</option>
+		<option value='datetime'>The date as Year-Month-Date Hours-Minutes-Seconds (datetime)</option>
+		<option value='int'>A whole number (integer)</option>
+		<option value='float'>Decimal numbers that are rounded off (float)</option>
+		<option value='decimal'>Decimal numbers that are precise and do not round off (decimal)</option>
+</select> 
+Name:  <input id='name2' type="text" name="fieldsToCreate[2][name]" /></p>
+
+
+</div>
+
+<br /> <br /> 
+<p><a href="index.php" onclick="addNewInputForAnotherField(); return false;">Add another field?</a></p>
+
+
+<br /> <br />  
+
+<p><input type="submit" value="Create Table" /></p>
+<input type="hidden" name="choiceMade[]" value="formatSqlToCreateTables" />
+<input type="hidden" name="formName" value="showSqlForTableCreationForm" />
+
+
+</form>
+
+

@@ -1,0 +1,159 @@
+<div class="res">
+  <?php $loggedInId = $controller->command("getUserIdFromUserLoggedInTable"); ?>
+  <article>
+    <div class="mbr">
+      <section>
+	
+
+	<div class="container">
+	  <?php echo $controller->command("showUserMessages"); ?>  
+	  <br>
+	</div>
+
+
+
+
+	<h4 class="available_evenings">Available Evenings</h4>
+
+	  <br>
+	  <br>
+
+
+
+	<?php 
+
+	   $query = "SELECT * FROM lk_reservations WHERE user_id='$loggedInId' ";
+	   $thisUsersReservations = $controller->command("databaseFetchSqlWithTrust", $query, "private_reservations.htm"); 
+        $arrayOfMemberDinnersThatThisUserHasAReservationFor = array(); 
+        foreach ($thisUsersReservations as $r) { $arrayOfMemberDinnersThatThisUserHasAReservationFor[$r['id']] = $r['lk_occurrence_id'];  }
+
+        $today = date('Y-m-d');
+        $query = "
+        SELECT o.id as oid, o.name, o.description, o.start_day
+        FROM lk_occurrences o 
+        WHERE o.type = 'member_dinner' and o.start_day > '$today'
+        ORDER BY o.start_day
+        ";
+        $memberDinners = $controller->command("databaseFetchSqlWithTrust", $query, "private_reservations.htm"); 
+	?>
+
+
+
+	<?php foreach($memberDinners as $md): ?>
+
+	<?php $dateToBeShown = date('l, F j', strtotime($md['start_day'])); ?>
+	<?php $idForDinnerForm = "reservation-dinner-" . $md['oid']; ?>
+	<?php $idForBottleForm = "reservation-bottle-" . $md['oid']; ?>
+
+	<h4><?php echo $dateToBeShown ?></h4>
+
+	<?php if (in_array($md['oid'], $arrayOfMemberDinnersThatThisUserHasAReservationFor)): ?>
+	<?php $reservationId = array_search($md['oid'], $arrayOfMemberDinnersThatThisUserHasAReservationFor); ?>
+
+	<a href="/private.php?page=private_reservations_each&editId=<?php echo $reservationId ?>" class="button-custom btn_left"><span>View Reservation</span></a>
+
+	<a href="/private.php?page=private_reservations&reservationId=<?php echo $reservationId ?>&choiceMade[]=databaseDeleteReservation" class="button-custom btn_right"><span>Cancel Reservations</span></a>
+
+	<?php else: ?>
+
+	<a href="#" class="button-custom btn_left" onclick="showTheModalForThisOccurrence('<?php echo $idForDinnerForm ?>'); return false;"><span>Reserve Member Dinner</span></a>
+
+	<?php endif ?>
+
+
+
+
+
+
+	<br><br><br>
+
+
+
+
+
+
+
+
+
+
+	
+	<form action="/private.php?page=private_reservations_details" method="post" class="reservation_dialog" id="<?php echo $idForDinnerForm ?>">
+	  <input type="hidden" name="choiceMade[]" value="createRecordsForMultipleDatabaseTables" />
+
+
+	  <input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $controller->command("currentEditingId", 'lk_reservations'); ?>][user_id]" value="<?php echo $loggedInId ?>">
+	  <input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $controller->command("currentEditingId", 'lk_reservations'); ?>][lk_occurrence_id]" value="<?php echo $md['oid'] ?>">
+	  <input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $controller->command("currentEditingId", 'lk_reservations'); ?>][does_this_user_want_bottle_service]" value="0">
+	  <input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $controller->command("currentEditingId", 'lk_reservations'); ?>][machine_id]" value="<?php echo $controller->getVar("machineId"); ?>">
+
+	  <h5 data-template="night"><?php echo $dateToBeShown ?></h5>
+
+	  <?php $thisOccurrenceCourses = $controller->command("databaseGetCoursesForOccurrence", $md['oid']); ?>
+
+	  <ul>
+	    <?php foreach($thisOccurrenceCourses as $course): ?>
+	    <li style='font-weight:normal;color:#000;font-family:arial;font-size:11px;margin-top:30px;'><?php echo $course['name'] ?></li>
+
+
+	    <?php $thisCoursesFoods = $controller->command("databaseGetFoodsForCourse", $course['id']);  ?>
+
+	    <?php foreach($thisCoursesFoods as $food): ?>
+  	    <li><?php echo $food['name'] ?></li>
+  	    <?php endforeach ?>
+	    <?php endforeach ?>
+	  </ul>
+
+	  <br>
+	  <a href="#" class="button_modal" onclick="document.getElementById('<?php echo $idForDinnerForm ?>').submit(); return false;">RESERVE THIS DATE</a>
+	</form>
+
+
+
+
+
+
+
+
+	
+	<form action="/private.php?page=private_reservations_details" method="post" class="reservation_dialog" id="<?php echo $idForBottleForm ?>">
+
+	  <input type="hidden" name="choiceMade[]" value="createRecordsForMultipleDatabaseTables" />
+
+	  <input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $controller->command("currentEditingId", 'lk_reservations'); ?>][user_id]" value="<?php echo $loggedInId ?>">
+	  <input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $controller->command("currentEditingId", 'lk_reservations'); ?>][lk_occurrence_id]" value="<?php echo $md['oid'] ?>">
+	  <input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $controller->command("currentEditingId", 'lk_reservations'); ?>][does_this_user_want_bottle_service]" value="1">
+
+
+	  <h5 data-template="night"><?php echo $dateToBeShown ?></h5>
+
+	  <?php $thisOccurrenceCourses = $controller->command("databaseGetCoursesForOccurrence", $md['oid']); ?>
+
+	  <ul>
+	    <?php foreach($thisOccurrenceCourses as $course): ?>
+	    <li style='font-weight:normal;color:#000;font-family:arial;font-size:11px;margin-top:30px;'><?php echo $course['name'] ?></li>
+
+
+	    <?php $thisCoursesFoods = $controller->command("databaseGetFoodsForCourse", $course['id']);  ?>
+	    <?php foreach($thisCoursesFoods as $food): ?>
+  	    <li><?php echo $food['name'] ?></li>
+  	    <?php endforeach ?>
+	    <?php endforeach ?>
+	  </ul>
+
+	  <br>
+	  <a href="#" class="button_modal" onclick="document.getElementById('<?php echo $idForBottleForm ?>').submit(); return false;">RESERVE THIS DATE</a>
+	</form>
+
+
+
+	<?php endforeach ?>
+
+
+
+
+
+      </section>
+    </div>
+  </article>
+</div>
+

@@ -1,0 +1,20 @@
+
+<form method="post" action="index.php">
+
+<h3>Unique Fields</h3>
+
+<p>Indicate which database fields need to have unique values. Common needs for uniquness include 
+user names - you do not want to allow two different users to have the same name.</p>
+
+<p><input type="submit" value="Make fields unique" /></p>
+
+<?php showAllTables("chooseAField.htm"); ?>
+
+<p><input type="submit" value="Make fields unique" /></p>
+<input type="hidden" name="choiceMade[]" value="makeFieldsUnique" /> 
+
+</form>
+
+
+
+

@@ -1,0 +1,13 @@
+
+<form method="post" action="index.php">
+
+<h3>Delete any of these tables: </h3>
+
+<?php listDatabaseTables("databaseTablesEach.htm"); ?>
+
+<p><input type="submit" value="Delete tables" /></p>
+
+<input type="hidden" name="choiceMade[]" value="deleteTable" />
+<input type="hidden" name="choiceMade[]" value="deleteForms" />
+
+</form>

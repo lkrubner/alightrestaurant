@@ -1,0 +1,27 @@
+<?php 
+$query = "SELECT count(user_id) as howManyNominated, nomination_which_member_nominated_this_user_id FROM users where nomination_which_member_nominated_this_user_id  != 0 group by nomination_which_member_nominated_this_user_id order by howManyNominated desc";
+$items = $controller->command("databaseFetchSqlWithTrust", $query, "admin_list_users_who_nominate.htm"); 
+?>
+
+
+
+
+
+<?php echo $controller->command("showUserMessages"); ?>
+
+
+
+<div class="container">
+
+
+<?php foreach($items as $i): ?>
+   <?php $u = $controller->command("rowGetWithTrust", "users", $i["nomination_which_member_nominated_this_user_id"]); ?>
+
+   <h5><a href="/admin.php?page=admin_edit_user&editId=<?php echo $u['user_id']; ?>"><?php echo $u['first_name']; ?> <?php echo $u['last_name']; ?> </a></h5>
+   <p>Has nominated <?php echo $i["howManyNominated"]; ?> people</p>
+   <br>
+<?php endforeach ?>
+
+
+
+</div>

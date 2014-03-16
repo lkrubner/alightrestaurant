@@ -1,0 +1,52 @@
+// 04-17-07 - I put this into the class Controller. Then I took it out. I like it,
+// but I'm not sure I'm really going to use it, and Controller needs to stay
+// as lean as possible. 
+
+
+	/**
+	* 04-15-07 - this is a redo of the command() method. This uses func_get_args
+	* so that the parameters don't need to be hard-coded.
+	* 
+	* 
+	* 
+	* 
+	*/
+	function doThis() {
+		$numargs = func_num_args();
+		if (is_numeric($numargs) && $numargs > 0) { 
+			$arg_list = func_get_args();
+	
+			// 04-15-07 - the first parameter should be the function name
+			// so we peel that away from the other parameters. We then
+			// create an array of parameters that includes all the parameters
+			// except for the first one. That array then gets past to the 
+			// function we wish to call. 
+			//
+			// I'd be very happy if I could find a way to get the parameter
+			// list as an associative array. Then we could pass arguments like
+			// in Ruby. 
+			$functionName = $arg_list[0];
+			$parametersToBePassedToFunction = array(); 
+			for ($i = 1; $i < $numargs; $i++) {
+				$parametersToBePassedToFunction[] = $arg_list[$i];
+			}
+	
+			if ($functionName) {
+				if (function_exists($functionName)) {
+					$imported = true; 
+				} else {
+					$imported = $this->import($functionName, "Controller");
+				}
+				if ($imported) {
+					$result = $functionName($parametersToBePassedToFunction);
+					return $result; 
+				} else {
+					$this->error("In Controller, in the method doThis(), we were told to import the function '$functionName' but we were unable to.", "Controller");
+				}
+			} else {
+				$this->error("In Controller, the method doThis() was called but was given no function name to call.", "Controller");
+			}
+		} else {
+			$this->error("In Controller, the method doThis() was called, but no parameters were given it. It needs to be told at least what function to call."); 
+		}
+	}

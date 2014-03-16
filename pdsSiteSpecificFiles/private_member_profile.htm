@@ -1,0 +1,67 @@
+<?php
+
+$userId = $controller->getVar("id"); 
+
+if ($userId):
+  $user = $controller->command("rowGetWithTrust", "users", $userId);
+
+?>
+
+
+
+
+
+
+
+<article>
+
+
+<h3><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?> </h3>
+
+
+<p>The club prohibits the use of the directory for commercial solicitation.<br>
+
+<?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?> may have elected to keep some profile information private.</p>
+
+
+	
+<p>Title: <?php echo $user['title']; ?> </p>
+	
+<p>Employment: <?php echo $user['organization']; ?> </p>
+	
+<p>Education: <?php echo $user['university']; ?> </p>
+	
+<p>Contact: <a href="mailto:<?php echo $user['email']; ?>"><?php echo $user['email']; ?></a></p>
+	
+
+  
+
+  <?php if($user['pnkedin']): ?>
+  <p><a href="<?php echo $user['pnkedin'] ?>" id="ln">PnkedIn Profile</a></p>
+  <?php endif ?>
+
+  <?php if($user['twitter']): ?>
+  <p><a href="<?php echo $user['pnkedin'] ?>" id="ln">Twitter Profile</a></p>
+  <?php endif ?>
+
+  <?php if($user['gplus']): ?>
+  <p><a href="<?php echo $user['gplus'] ?>" id="ln">Google+ Profile</a></p>
+  <?php endif ?>
+
+  <?php if($user['facebook']): ?>
+  <p><a href="<?php echo $user['facebook'] ?>" id="ln">Facebook Profile</a></p>
+  <?php endif ?>
+
+  <?php if($user['website']): ?>
+  <p><a href="<?php echo $user['website'] ?>" id="ln">Personal Website</a></p>
+  <?php endif ?>
+
+	
+  <div class="clear"></div>
+	
+	
+
+
+  <?php endif ?>
+
+

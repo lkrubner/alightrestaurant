@@ -1,0 +1,161 @@
+
+<?php $controller->import("currentEditingId", "admin_edit_wine.htm"); ?>
+<?php $controller->import("currentValueForTotalFormInputs", "admin_edit_wine.htm"); ?>
+
+<?php $controller->command("setTotalFormInputsForPage", "lk_wines", $controller->command("currentEditingId",'lk_wines')); ?> 
+<?php $controller->command("setTotalFormInputsOwnersForTheseRecords"); ?>
+
+
+<div class="container">
+
+
+
+
+
+
+  <?php echo $controller->command("showUserMessages"); ?>
+
+
+
+<form id="lk_wines_form_search" action="/admin.php?page=<?php echo $controller->getVar("page"); ?>&editId=<?php echo $controller->command("currentEditingId",'lk_wines'); ?>" method="post">
+
+
+    <input type="hidden" name="choiceMade[]" value="checkToSeeIfTheUserIsSearchingForAWineAndIfYesThenSetThatWineAsTheCurrentWineToEdit" />
+
+
+  <div class="modal-header">
+    <h3>Wines</h3>
+  </div>
+
+
+
+
+  <div class="row">
+    <div class="span12">
+      <table>
+	<tr>
+	  <td>
+	    <select id="new_wine_for_occurrence_1" name="new_wine_for_occurrence_1">
+	      <option></option>
+	      <?php echo $controller->command("getAllWinesInASelectBox"); ?>
+	    </select>
+	  </td>
+	  <td id="free_form_search_area_for_wines">
+	    Or search: <input type="text" id="new_wine_for_occurrence_2" name="new_wine_for_occurrence_2"> <input type="submit" value="Search!" style="margin: -8px 0 0 10px;">
+	  </td>
+	</tr>
+      </table>
+    </div>
+  </div>
+
+
+  <script>
+    $(function() {
+    var availableTags = [
+    <?php echo $controller->command("getAllWinesInAJavascriptArray"); ?>
+    ];
+    $( "#new_wine_for_occurrence_2" ).autocomplete({
+    source: availableTags
+    });
+
+    $( "#new_wine_for_occurrence_1" ).change(function () {
+      thisForm = document.getElementById("lk_wines_form_search"); 
+      thisForm.submit(); 
+    });
+
+    });
+  </script>
+
+
+</form>
+
+
+
+
+
+
+
+
+
+<form id="lk_wines_form" action="/admin.php?page=<?php echo $controller->getVar("page"); ?>&editId=<?php echo $controller->command("currentEditingId",'lk_wines'); ?>" method="post">
+
+
+    <div class="control-group">
+      <label class="control-label" for="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][name]">Name </label>
+      <div class="controls">
+	<input type="text" id="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][name]" name="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][name]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_wines", $controller->command("currentEditingId",'lk_wines'), "name"); ?>" />
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][vintage]">Vintage </label>
+      <div class="controls">
+	<input type="text" id="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][vintage]" name="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][vintage]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_wines", $controller->command("currentEditingId",'lk_wines'), "vintage"); ?>" />
+      </div>
+    </div>
+
+
+    <div class="control-group">
+      <label class="control-label" for="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][region]">Region </label>
+      <div class="controls">
+	<input type="text" id="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][region]" name="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][region]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_wines", $controller->command("currentEditingId",'lk_wines'), "region"); ?>" />
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][color]">Color </label>
+      <div class="controls">
+	<input type="text" id="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][color]" name="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][color]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_wines", $controller->command("currentEditingId",'lk_wines'), "color"); ?>" />
+      </div>
+    </div>
+
+
+    <div class="control-group">
+      <label class="control-label" for="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][varietal]">Varietal </label>
+      <div class="controls">
+	<input type="text" id="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][varietal]" name="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][varietal]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_wines", $controller->command("currentEditingId",'lk_wines'), "varietal"); ?>" />
+      </div>
+    </div>
+
+
+    <div class="control-group">
+      <label class="control-label" for="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][price]">Price </label>
+      <div class="controls">
+	<input type="text" id="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][price]" name="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][price]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_wines", $controller->command("currentEditingId",'lk_wines'), "price"); ?>" />
+      </div>
+    </div>
+
+
+    <div class="control-group">
+      <label class="control-label" for="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][country]">Country </label>
+      <div class="controls">
+	<input type="text" id="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][country]" name="totalFormInputs[lk_wines][<?php echo $controller->command("currentEditingId",'lk_wines'); ?>][country]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_wines", $controller->command("currentEditingId",'lk_wines'), "country"); ?>" />
+      </div>
+    </div>
+
+
+
+
+    <hr class="legend">
+
+
+
+
+
+    <input name="save" class="btn btn-primary" id="save_occurrence" value="Save" type="submit">
+
+    <a href="/admin.php?page=admin_calendar" class="btn">Cancel</a>
+    
+    <a href="#remove" class="btn btn-danger pull-right"  onclick="deleteThisWineItem('lk_wines', <?php echo $controller->command("currentEditingId",'lk_wines'); ?>); return false;" id="delete-btn">Delete Wine</a>
+
+
+
+    <input type="hidden" name="choiceMade[]" value="createRecordsForMultipleDatabaseTables" />
+
+    <input type="hidden" name="choiceMade[]" value="databaseDeleteAllItemsInDeleteArray" />
+
+
+    <input type="hidden" name="formName" value="admin_edit_wine.htm" />
+
+
+</form>

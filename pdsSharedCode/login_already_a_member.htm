@@ -1,0 +1,14 @@
+<?php $controller->command("showUserMessages"); ?>
+	<form id="login_input" method="post" action="index.php">
+		<h4>Already a member?</h4>
+			User Name&nbsp;<input type="text" name="formInputs[username]" /><br />
+			Password&nbsp;<input type="password" name="formInputs[password]" /><br />
+
+		<div id="sign_up">
+				Want to join?&nbsp;&nbsp;<a href="signup.php">Sign Up!</a><br />
+			<input type="submit" value="LOG IN" class="button"/>
+			<input type="hidden" name="choiceMade[]" value="userLogin" />
+
+		</div>
+	</form>
+

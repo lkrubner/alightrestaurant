@@ -1,0 +1,27 @@
+<?php
+  $nominees = $controller->command("getAllNominees");
+?>
+
+
+<div class="container">
+	<div class="row">
+		<div class="span12"> 
+			<table class="table">
+				<tr>
+					<th>Nominee Name</th>
+					<th>Nominated By</th>
+					<th>Notes</th>
+					<th>Time Nominated</th>
+				</tr>
+				<?php foreach($nominees as $n){ ?>
+				<tr>
+					<td><?php echo $n->nominee_first." ".$n->nominee_last." - ".$n->nominee_email; ?></td>
+					<td><?php echo $n->user_first." ".$n->user_last; ?></td>
+					<td><?php echo $n->notes; ?></td>
+					<td><?php echo $n->time_nominated; ?></td>
+				</tr>
+				<?php } ?>
+			</table>
+		<div>
+	</div>
+</div>

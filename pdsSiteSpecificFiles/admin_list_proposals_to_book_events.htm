@@ -1,0 +1,25 @@
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "SELECT * FROM lk_proposals_to_book_events order by id desc", "admin_list_booking_proposals_for_event.htm"); ?>
+ 
+
+
+
+
+<?php echo $controller->command("showUserMessages"); ?>
+
+
+
+<div class="container">
+
+
+<?php foreach($items as $i): ?>
+   <?php $u = $controller->command("rowGetWithTrust", "users", $i["user_id"]); ?>
+
+   <h5><a href="/admin.php?page=admin_edit_proposals_to_book_events&editId=<?php echo $i["id"]; ?>">Ideal date: <?php echo $i["start_day"]; ?></a></h5>
+   <p>User: <?php echo $u["first_name"]; ?>  <?php echo $u["last_name"]; ?>  <?php echo $u["email"]; ?> 
+   <p>Budget: <?php echo $i["what_is_the_total_budget_for_this_event"]; ?></p>
+   <br>
+<?php endforeach ?>
+
+
+
+</div>

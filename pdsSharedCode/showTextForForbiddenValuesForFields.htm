@@ -1,0 +1,19 @@
+
+<form method="post" action="index.php">
+
+<h4>The text for all forbidden values</h4>
+
+<p><input type="submit" value="Forbid" /></p>
+
+<p>Feel free to type in more lines, keeping the overall pattern of these lines: <br />
+<textarea name="stringOfRequiredValues"><?php currentValueForFormResults("forbiddenValuesForFields"); ?></textarea>
+</p>
+
+<p><input type="checkbox" name="overwriteRequiredFieldValues" value="t" /> Overwrite existing list of required values? (the default action is to add to the list).</p>
+
+<br /> <br /> <br /> 
+<p><input type="submit" value="Forbid" /></p>
+<input type="hidden" name="choiceMade[]" value="makeFileOfForbiddenValuesForFields" />
+
+
+</form>

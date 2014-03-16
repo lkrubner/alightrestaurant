@@ -1,0 +1,50 @@
+<?php
+
+$memberWineId = $controller->getVar("editId"); 
+$items = $controller->command("databaseFetchSqlWithTrust", "
+SELECT
+  w.name, w.region, w.vintage, w.country, w.varietal,
+  mw.id, mw.has_this_member_already_consumed_this_bottle_of_wine, mw.has_this_wine_been_paid_for
+FROM 
+  lk_wines w JOIN lk_member_wines mw ON w.id=mw.wine_id
+WHERE
+  mw.id=$memberWineId order by mw.id", "admin_edit_member_wines.htm"); 
+
+$i = current($items); 
+
+?>
+
+
+
+<form action="/admin.php?page=admin_edit_member_wines&id=<?php echo $memberWineId; ?>" method="post">
+
+  <p><a href="/admin.php?page=admin_edit_member_wines&editId=<?php echo $i['user_id']; ?>"><?php echo $i['name']; ?> <?php echo $i['region']; ?> <?php echo $i['varietal']; ?> <?php echo $i['vintage']; ?></a></p>
+
+
+   <p>Has this wine been paid for?
+     <select name="totalFormInputs[lk_member_wines][<?php echo $i['user_id']; ?>][has_this_wine_been_paid_for]">
+       <?php if($i["has_this_wine_been_paid_for"] == 1): ?>
+         <option value="1">Yes</option>
+       <?php endif ?>
+       <option value="0">No</option>
+       <option value="1">Yes</option>
+     </select></p>
+
+
+  <p>Has this wine already been consumed?
+    <select name="totalFormInputs[lk_member_wines][<?php echo $i['user_id']; ?>][has_this_member_already_consumed_this_bottle_of_wine]">
+       <?php if($i["has_this_member_already_consumed_this_bottle_of_wine"] == 1): ?>
+         <option value="1">Yes</option>
+       <?php endif ?>
+       <option value="0">No</option>
+       <option value="1">Yes</option>
+ 
+    </select></p>
+
+
+  <p><input type="submit"></p>
+
+</form>
+
+
+

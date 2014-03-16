@@ -1,0 +1,654 @@
+<?php 
+
+$controller->import("currentEditingId", "admin_edit_user.htm"); 
+$controller->import("currentValueForTotalFormInputs", "admin_edit_user.htm"); 
+
+$controller->command("setTotalFormInputsForPage", "users", $controller->command("currentEditingId",'users'));  
+$controller->command("setTotalFormInputsOwnersForTheseRecords"); 
+
+$userId = $controller->command("currentEditingId",'users'); 
+
+?>
+
+
+
+
+
+
+<div class="container">
+
+
+
+
+  <form id="users_search_form" action="/admin.php?page=<?php echo $controller->getVar("page"); ?>&editId=<?php echo $controller->command("currentEditingId",'users'); ?>" method="post">
+
+    <input type="hidden" name="choiceMade[]" value="checkToSeeIfTheUserIsSearchingForAMemberAndIfYesThenSetThatMemberAsTheCurrentMemberToEdit" />
+
+    <div class="row">
+      <div class="span12">
+	<table>
+	  <tr>
+	    <td>
+	      <select id="new_member_for_occurrence_1" name="new_member_for_occurrence_1">
+		<option></option>
+		<?php echo $controller->command("getAllMembersInASelectBox"); ?>
+	      </select>
+	    </td>
+	    <td id="free_form_search_area_for_members">
+	      Or search: <input type="text" id="new_member_for_occurrence_2" name="new_member_for_occurrence_2"> <input type="submit" value="Search!" style="margin: -8px 0 0 10px;">
+	    </td>
+	  </tr>
+	</table>
+      </div>
+    </div>
+
+
+    <script>
+      $(function() {
+      var availableTags = [
+      <?php echo $controller->command("getAllMembersInAJavascriptArray"); ?>
+      ];
+      $( "#new_member_for_occurrence_2" ).autocomplete({
+      source: availableTags
+      });
+
+      $( "#new_member_for_occurrence_1" ).change(function () {
+      thisForm = document.getElementById("users_search_form"); 
+      thisForm.submit(); 
+      });
+
+      });
+    </script>
+
+
+</form>
+
+
+  <form id="users_form" action="/admin.php?page=<?php echo $controller->getVar("page"); ?>&editId=<?php echo $controller->command("currentEditingId",'users'); ?>" method="post">
+
+
+
+
+    <div class="modal-header">
+      <h3>Users</h3>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <p><a href="/admin.php?page=user_arriving_at_the_club&editId=<?php echo $controller->command("currentEditingId",'users'); ?>">Is this user arriving at the club?</a></p>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][active]">Active </label>
+	<div class="controls">
+	  <p><?php if($controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "active")): ?>
+	    This user is NOT a member.
+	    <?php else: ?>
+	    This user is an activated member.
+	    <?php endif ?></p>
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][active]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][active]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "active"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][first_name]">First_Name </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][first_name]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][first_name]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "first_name"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][last_name]">Last_Name </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][last_name]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][last_name]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "last_name"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][email]">Email </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][email]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][email]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "email"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][registration_date]">Registration_Date </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][registration_date]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][registration_date]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "registration_date"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][organization]">Organization </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][organization]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][organization]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "organization"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][title]">Title </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][title]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][title]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "title"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university]">University </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "university"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university_graduate]">Graduate school</label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university_graduate]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university_graduate]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "university_graduate"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][interview]">Interview </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][interview]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][interview]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "interview"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][activesince]">Activesince </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][activesince]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][activesince]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "activesince"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][birthday]">Birthday </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][birthday]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][birthday]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "birthday"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][disable_email]">Disable_Email </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][disable_email]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][disable_email]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "disable_email"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][ref]">Ref </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][ref]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][ref]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "ref"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][linkedin]">Linkedin </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][linkedin]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][linkedin]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "linkedin"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][twitter]">Twitter </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][twitter]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][twitter]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "twitter"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][gplus]">Gplus </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][gplus]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][gplus]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "gplus"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][facebook]">Facebook </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][facebook]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][facebook]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "facebook"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][phone]">Phone </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][phone]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][phone]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "phone"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][website]">Website </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][website]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][website]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "website"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+      
+
+
+<?php if ($controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "nomination_which_member_nominated_this_user_id")): ?>
+    <?php $nominatingUser = $controller->command("rowGetWithTrust", "users", $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "nomination_which_member_nominated_this_user_id")); ?>
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][nomination_notes_written_by_nominating_member]">Nomination notes written by whoever nominated this user </label>
+	<div class="controls">
+	  <p>This user was nominated by: <a href="/admin.php?page=admin_edit_user&editId=<?php echo $nominatingUser["user_id"]; ?>"><?php echo $nominatingUser["first_name"]; ?> <?php echo $nominatingUser["last_name"]; ?> <?php echo $nominatingUser["email"]; ?></a></p>
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][nomination_notes_written_by_nominating_member]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][nomination_notes_written_by_nominating_member]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "nomination_notes_written_by_nominating_member"); ?>" />
+	</div>
+      </div>
+
+      
+<?php endif ?>
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][allergies]">Allergies </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][allergies]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][allergies]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "allergies"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][have_you_visited_any_of_these_places]">Have You Visited Any Of These Places </label>
+	<div class="controls">
+	  <textarea type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][have_you_visited_any_of_these_places]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][have_you_visited_any_of_these_places]"><?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "have_you_visited_any_of_these_places"); ?></textarea>
+	</div>
+      </div>
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_is_your_favorite_piece_of_art]">What is your favorite piece of art? </label>
+	<div class="controls">
+	  <textarea type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_is_your_favorite_piece_of_art]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_is_your_favorite_piece_of_art]"><?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "what_is_your_favorite_piece_of_art"); ?></textarea>
+	</div>
+      </div>
+
+            
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_are_some_of_your_favorite_places_to_travel]">What are your favorite places to travel?</label>
+	<div class="controls">
+	  <textarea type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_are_some_of_your_favorite_places_to_travel]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_are_some_of_your_favorite_places_to_travel]"><?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "what_are_some_of_your_favorite_places_to_travel"); ?></textarea>
+	</div>
+      </div>
+
+            
+      
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_are_your_greatest_accomplishments]">What are your greatest accomplishments? </label>
+	<div class="controls">
+	  <textarea type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_are_your_greatest_accomplishments]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][what_are_your_greatest_accomplishments]"><?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "what_are_your_greatest_accomplishments"); ?></textarea>
+	</div>
+      </div>
+
+            
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][address_city]">What city do you live in?</label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][address_city]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][address_city]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "address_city"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][how_many_weeks_a_year_do_you_travel]">How many weeks a year do you travel?</label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][how_many_weeks_a_year_do_you_travel]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][how_many_weeks_a_year_do_you_travel]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "how_many_weeks_a_year_do_you_travel"); ?>" />
+	</div>
+      </div>
+
+
+      
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][industry]">What industry are you in?</label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][industry]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][industry]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "industry"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university_graduate]">Graduate school?</label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university_graduate]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][university_graduate]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "university_graduate"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][security_level]">Security_Level </label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][security_level]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][security_level]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "security_level"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][password]">Password </label>
+	<div class="controls">
+	  <input type="password" id="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][password]" name="totalFormInputs[users][<?php echo $controller->command("currentEditingId",'users'); ?>][password]" value="<?php echo $controller->command("currentValueForTotalFormInputs","users", $controller->command("currentEditingId",'users'), "password"); ?>" />
+	</div>
+      </div>
+
+      
+
+
+      
+
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+      
+
+
+      <hr class="legend">
+
+
+
+
+
+      <input name="save" class="btn btn-primary" id="save_occurrence" value="Save" type="submit">
+
+      <a href="/admin.php?page=admin_calendar" class="btn">Cancel</a>
+      
+      <a href="#remove" class="btn btn-danger pull-right"  onclick="deleteThisUserItem('users', <?php echo $controller->command("currentEditingId",'users'); ?>); return false;" id="delete-btn">Delete User</a>
+
+
+
+      <input type="hidden" name="choiceMade[]" value="createRecordsForMultipleDatabaseTables" />
+
+      <input type="hidden" name="choiceMade[]" value="databaseDeleteAllItemsInDeleteArray" />
+
+      <input type="hidden" name="formName" value="admin_edit_user.htm" />
+
+
+  </form>
+
+
+
+
+<?php if($userId): ?>
+
+<h4 class="admin_edit_user_sub_headlines_for_different_categories_of_things_the_user_has_done">User's nominated by this user:</h4>
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "select * from users where nomination_which_member_nominated_this_user_id = $userId order by user_id", "admin_edit_user.htm"); ?>
+<?php foreach($items as $i): ?>
+   <p><a href="/admin.php?page=admin_edit_user&editId=<?php echo $i['user_id']; ?>"><?php echo $i['first_name']; ?> <?php echo $i['last_name']; ?> <?php echo $i['email']; ?> </a></p>
+<?php endforeach ?>
+
+
+
+
+
+<h4 class="admin_edit_user_sub_headlines_for_different_categories_of_things_the_user_has_done">Permanently invited friends of this user:</h4>
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "select * from users where user_id in (select user_id_of_friend from lk_friends where user_id = $userId) order by user_id", "admin_edit_user.htm"); ?>
+<?php foreach($items as $i): ?>
+   <p><a href="/admin.php?page=admin_edit_user&editId=<?php echo $i['user_id']; ?>"><?php echo $i['first_name']; ?> <?php echo $i['last_name']; ?> <?php echo $i['email']; ?> </a></p>
+<?php endforeach ?>
+
+
+
+<h4 class="admin_edit_user_sub_headlines_for_different_categories_of_things_the_user_has_done">Wine's reserved by this user:</h4>
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "
+SELECT
+  w.name, w.region, w.vintage, w.country, w.varietal,
+  mw.id, mw.has_this_member_already_consumed_this_bottle_of_wine, mw.has_this_wine_been_paid_for
+FROM 
+  lk_wines w JOIN lk_member_wines mw ON w.id=mw.wine_id
+WHERE
+  mw.user_id= $userId order by mw.id", "admin_edit_user.htm"); ?>
+<?php foreach($items as $i): ?>
+   <p><a href="/admin.php?page=admin_edit_member_wines&editId=<?php echo $i['id']; ?>"><?php echo $i['name']; ?> <?php echo $i['region']; ?> <?php echo $i['varietal']; ?> <?php echo $i['vintage']; ?></a></p>
+   <p>Has this wine been paid for? <?php if($i['has_this_wine_been_paid_for'] == 1): ?>Yes<?php else: ?>No<?php endif ?></p>
+   <p>Has this wine already been consumed? <?php if($i['has_this_member_already_consumed_this_bottle_of_wine'] == 1): ?>Yes<?php else: ?>No<?php endif ?></p>
+<?php endforeach ?>
+
+
+
+
+<h4 class="admin_edit_user_sub_headlines_for_different_categories_of_things_the_user_has_done">History of all reservations of this user:</h4>
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "
+SELECT
+  o.type, o.name, o.start_day,
+  r.does_this_user_want_bottle_service, r.at_what_time_does_the_member_plan_to_arrive
+FROM 
+  lk_occurrences o JOIN lk_reservations r  ON o.id=r.lk_occurrence_id
+WHERE
+  r.user_id= $userId order by r.at_what_time_does_the_member_plan_to_arrive", "admin_edit_user.htm"); ?>
+<?php foreach($items as $i): ?>
+   <p>Date: <?php echo $i['start_day']; ?></p>
+   <p>Arrival type: <?php echo $i['at_what_time_does_the_member_plan_to_arrive']; ?></p>
+   <p>Type of event: <?php echo $i['type']; ?></p>
+<?php endforeach ?>
+
+
+
+
+
+
+<h4 class="admin_edit_user_sub_headlines_for_different_categories_of_things_the_user_has_done">History of visits to the club:</h4>
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "select * from lk_users_visit_the_club_history where user_id = $userId", "admin_edit_user.htm"); ?>
+<?php foreach($items as $i): ?>
+   <p>They arrived at: <?php echo $i['when_did_they_arrive']; ?></p>
+   <p>Staff notes: <?php echo $i['notes']; ?></p>
+<?php endforeach ?>
+
+
+<?php endif ?>
+
+
+
+
+
+

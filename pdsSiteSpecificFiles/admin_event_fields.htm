@@ -1,0 +1,196 @@
+<?php
+
+$subMenu = "event_fields";
+
+// 2013-11-24 - I strongly dislike these static functions inside of classes.
+// I plan to eventually tear them all out, but for now I am desperate to convert
+// this code as fast as possible. 
+$controller->import("SpConfig", "admin_event_fields.htm"); 
+$controller->import("SpGenField", "admin_event_fields.htm"); 
+
+if(isset($_POST['save'])){
+	foreach($_POST['config'] as $key=>$val){
+		SpConfig::set($key, $val);
+	}
+	redirect('event_fields.php');
+}
+
+if(isset($_POST['save_gen_field'])){
+	$field = new SpGenField($_POST['gen_field_key']);
+	foreach($_POST[$_POST['gen_field_key']] as $key=>$data){
+		$field->updateOption($key, $data['title'], $data['order']);
+	}
+	redirect("event_fields.php");
+}
+
+if(isset($_POST['new_gen_field_opt'])){
+	$field = new SpGenField($_POST['gen_field_key']);
+	$field->addOption($_POST['new_gen_field_opt']);
+	redirect("event_fields.php");
+}
+
+if(isset($_POST['retire_gen_field_opt'])){
+	$service = new SpGenField($_POST['gen_field_key']);
+	$service->retireOption($_POST['gen_field_opt_key']);
+	redirect("event_fields.php");
+}
+
+$event_status = new SpGenField('event_status');
+$event_type = new SpGenField('event_type');
+$event_lead = new SpGenField('event_lead');
+
+?>
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<h5>Global Event Config</h5>
+			<form class="form-horizontal" action="event_fields.php" method="post">
+				<div class="control-group">
+					<div class="control-label">Default Guest Restriction</div>
+					<div class="controls">
+						<input type='text' name='config[guest_limit]' value='<?php echo SpConfig::get('guest_limit'); ?>' class="input-mini">
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<input type='submit' class="btn btn-primary" name="save" value="Save">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="span4">
+			<h5>Event Status</h5>
+
+			<?php if(count($event_status->options())!=0){ ?>
+			<form action="event_fields.php" class="form-inline" style="margin-bottom:0;" method="post">
+				<table class="table table-condensed" style="margin-bottom:0;">
+				<tr>
+					<th>Title</th>
+					<th colspan="2">Order</th>
+				</tr>
+				<?php foreach($event_status->options() as $opt){ ?>
+					<tr>
+						<td><input type='text' name='event_status[<?php echo $opt->opt_key; ?>][title]' value="<?php echo htmlentities($opt->opt_title); ?>" style="width:140px;"></td>
+						<td><input type='text' name='event_status[<?php echo $opt->opt_key; ?>][order]' value="<?php echo htmlentities($opt->default_order); ?>" style="width:25px;"></td>
+						<td style="text-align:right;"><a href="#" class="btn btn-danger retire-gen-opt-btn" data-field-key="event_status" data-name="<?php echo htmlentities($opt->opt_title); ?>" data-opt-key="<?php echo $opt->opt_key; ?>"><i class="icon-white icon-remove"></i></a></td>
+					</tr>
+				<?php } ?>
+				<tr>
+					<td colspan="3">
+						<input type="hidden" name="gen_field_key" value="event_status">
+						<input type="submit" name="save_gen_field" value="Save" class="btn btn-primary">
+					</td>
+				</tr>
+				</table>
+			</form>
+			<?php } ?>
+
+			<form action="event_fields.php" class="form-inline" method="post">
+			<table class="table table-condensed">
+				<tr>
+					<td>
+						<input type="hidden" name="gen_field_key" value="event_status">
+						<input type="text" name="new_gen_field_opt" placeholder="New Option...">
+					</td>
+					<td style="text-align:right;">
+						<button class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+
+		<div class="span4">
+			<h5>Event Type</h5>
+
+			<?php if(count($event_type->options())!=0){ ?>
+			<form action="event_fields.php" class="form-inline" style="margin-bottom:0;" method="post">
+				<table class="table table-condensed" style="margin-bottom:0;">
+				<tr>
+					<th>Title</th>
+					<th colspan="2">Order</th>
+				</tr>
+				<?php foreach($event_type->options() as $opt){ ?>
+					<tr>
+						<td><input type='text' name='event_type[<?php echo $opt->opt_key; ?>][title]' value="<?php echo htmlentities($opt->opt_title); ?>" style="width:140px;"></td>
+						<td><input type='text' name='event_type[<?php echo $opt->opt_key; ?>][order]' value="<?php echo htmlentities($opt->default_order); ?>" style="width:25px;"></td>
+						<td style="text-align:right;"><a href="#" class="btn btn-danger retire-gen-opt-btn" data-field-key="event_type" data-name="<?php echo htmlentities($opt->opt_title); ?>" data-opt-key="<?php echo $opt->opt_key; ?>"><i class="icon-white icon-remove"></i></a></td>
+					</tr>
+				<?php } ?>
+				<tr>
+					<td colspan="3">
+						<input type="hidden" name="gen_field_key" value="event_type">
+						<input type="submit" name="save_gen_field" value="Save" class="btn btn-primary">
+					</td>
+				</tr>
+				</table>
+			</form>
+			<?php } ?>
+
+			<form action="event_fields.php" class="form-inline" method="post">
+			<table class="table table-condensed">
+				<tr>
+					<td>
+						<input type="hidden" name="gen_field_key" value="event_type">
+						<input type="text" name="new_gen_field_opt" placeholder="New Option...">
+					</td>
+					<td style="text-align:right;">
+						<button class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+
+		<div class="span4">
+			<h5>Lead Sources</h5>
+
+			<?php if(count($event_lead->options())!=0){ ?>
+			<form action="event_fields.php" class="form-inline" style="margin-bottom:0;" method="post">
+				<table class="table table-condensed" style="margin-bottom:0;">
+				<tr>
+					<th>Title</th>
+					<th colspan="2">Order</th>
+				</tr>
+				<?php foreach($event_lead->options() as $opt){ ?>
+					<tr>
+						<td><input type='text' name='event_lead[<?php echo $opt->opt_key; ?>][title]' value="<?php echo htmlentities($opt->opt_title); ?>" style="width:140px;"></td>
+						<td><input type='text' name='event_lead[<?php echo $opt->opt_key; ?>][order]' value="<?php echo htmlentities($opt->default_order); ?>" style="width:25px;"></td>
+						<td style="text-align:right;"><a href="#" class="btn btn-danger retire-gen-opt-btn" data-field-key="event_lead" data-name="<?php echo htmlentities($opt->opt_title); ?>" data-opt-key="<?php echo $opt->opt_key; ?>"><i class="icon-white icon-remove"></i></a></td>
+					</tr>
+				<?php } ?>
+				<tr>
+					<td colspan="3">
+						<input type="hidden" name="gen_field_key" value="event_lead">
+						<input type="submit" name="save_gen_field" value="Save" class="btn btn-primary">
+					</td>
+				</tr>
+				</table>
+			</form>
+			<?php } ?>
+
+			<form action="event_fields.php" class="form-inline" method="post">
+			<table class="table table-condensed">
+				<tr>
+					<td>
+						<input type="hidden" name="gen_field_key" value="event_lead">
+						<input type="text" name="new_gen_field_opt" placeholder="New Option...">
+					</td>
+					<td style="text-align:right;">
+						<button class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+
+	</div>
+</div>

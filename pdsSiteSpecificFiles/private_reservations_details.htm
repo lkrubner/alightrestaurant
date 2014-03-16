@@ -1,0 +1,99 @@
+<?php
+
+$arrayOfNewReservations = $controller->arrayOfAllCarriedInfo["arrayOfIdsOfRecordsThatWereJustCreated"]["lk_reservations"];
+
+if (count($arrayOfNewReservations) < 1) {
+   echo "An error occurred: we were not able to capture whatever reservation information you just entered.";
+   print_r($controller->arrayOfAllCarriedInfo["arrayOfIdsOfRecordsThatWereJustCreated"]); 
+}
+if (count($arrayOfNewReservations) > 1) {
+   echo "An error occurred: there were more (newly created) reservations that what we expected (that is, there were more than 1 new reservation).";
+}
+
+$reservationId = current($arrayOfNewReservations); 
+$thisReservation = $controller->command("rowGetWithTrust", "lk_reservations", $reservationId);
+$thisOccurrence = $controller->command("rowGetWithTrust", "lk_occurrences", $thisReservation['lk_occurrence_id']);
+$loggedInId = $controller->command("getUserIdFromUserLoggedInTable");
+
+?>
+
+
+
+
+
+<div class="res">
+  <article>
+    <div class="mbr">
+
+      Please specify the seating time of your reservation.      <br>      <br>
+
+      <section>
+
+	<?php $dateToBeShown = date('l, F j', strtotime($thisOccurrence['start_day'])); ?>
+
+	<h3><?php echo $dateToBeShown ?></h3>
+	
+	<form action="/private.php?page=private_reservations_each" method="post">
+
+	  <input type="hidden" name="choiceMade[]" value="privateReservationsDetailsSaveToDatabase">
+
+	  <input type="hidden"  name="reservationId" value="<?php echo $thisReservation['id']; ?>">
+
+	  <input type="hidden"  name="occurrenceId" value="<?php echo $thisReservation['lk_occurrence_id']; ?>">
+
+	  <div id="date_selected">
+	    <div class="dropdowns">
+
+	      <select name="seating_time" class="private-reservations-dropdown">
+		<option value="">SEATING TIME</option>
+		<?php echo $controller->command("formatTimeToShowSeatingTimesToTheCurrentLoggedInMemberWhenTheyCreateAReservation", $thisOccurrence); ?>
+	      </select>
+	      
+	      <select name="guests" class="private-reservations-dropdown">
+		<option value="">NUMBER OF GUESTS</option>
+		<option value='0'>0</option>
+		<option value='1'>1</option>
+		<option value='2'>2</option>
+		<option value='3'>3</option>					
+		<option value='4'>4</option>					
+		<option value='5'>5</option>					
+		<option value='6'>6</option>					
+		<option value='7'>7</option>					
+		<option value='8'>8</option>					
+	      </select>
+
+	      <div class="clear"></div>
+	    </div>
+	  </div>
+
+	  <a href="#" class="next-button button-custom" id="next-guest"><span>Lists guests and finalize reservation</span></a>
+
+	</form>
+
+      </section>
+    </div>
+  </article>
+
+  <script>
+    $(".next-button").click(function(e){
+    e.preventDefault();
+    $(this).closest("form").submit();
+    });
+
+
+
+    $("select[name='guests']").selectbox({onChange: function(){
+    if($(this).val()=="0"){
+    $("#next-guest").hide();
+    $("#next-res").show();
+    } else {
+    $("#next-res").hide();
+    $("#next-guest").show();
+    }
+    }
+    });
+  </script>
+
+
+
+</div>

@@ -1,0 +1,366 @@
+<?php 
+
+$spPricingObject = $controller->getObject("SpPricing", "admin_event_pricing.htm"); 
+
+if(isset($_POST['new'])){
+        $spPricingObject->create(new DateTime($_POST['new']));
+}
+
+if(isset($_POST['save'])){
+        $spPricingObject->setAttributes(new DateTime($_GET['d']), false);
+	$spPricingObject->save($_POST['pricing']);
+}
+
+if(!isset($_GET['d'])){
+        $url = '/admin.php?page=admin_event_pricing&d='. $spPricingObject->currentDate()->format('Y-m-d');
+        header('Location: '.$url);
+}
+
+$currentDate = $spPricingObject->currentDate();
+$pastDates = $spPricingObject->pastDates();
+$futureDates = $spPricingObject->futureDates();
+
+$pricing = $spPricingObject->setAttributes(new DateTime($_GET['d']));
+
+$spaces = $controller->command("loadAllSpaces");
+
+/* Food Fields */
+$spGenField1 = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+$spGenField1->setAttributes('food_item_services'); 
+$spGenField2 = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+$spGenField2->setAttributes('food_services'); 
+
+$food = array(
+	'item' => array(
+		'services'=>$spGenField1,
+		'service_items'=>array()
+	),
+	'menu' => array(
+		'services'=>$spGenField2,
+		'service_menus'=>array()
+	)
+);
+
+foreach($food['item']['services']->options() as $opt){
+        $spGenField = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+        $spGenField->setAttributes($opt->opt_key); 
+	$food['item']['service_items'][$opt->opt_key] = $spGenField;
+}
+
+foreach($food['menu']['services']->options() as $opt){
+        $spGenField = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+        $spGenField->setAttributes($opt->opt_key); 
+	$food['menu']['service_menus'][$opt->opt_key] = $spGenField;
+}
+
+
+
+$spGenField3 = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+$spGenField3->setAttributes('bev_services'); 
+$spGenField4 = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+$spGenField4->setAttributes('open_bar_service'); 
+$spGenField5 = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+$spGenField5->setAttributes('open_bar_service_opts'); 
+$spGenField6 = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+$spGenField6->setAttributes('cash_bar_drinks'); 
+$spGenField7 = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+$spGenField7->setAttributes('spring_venue_mod'); 
+$spGenField8 = $controller->getObject("SpGenField", "admin_event_pricing.htm"); 
+$spGenField8->setAttributes('hudson_venue_mod'); 
+
+/* Bev Fields */
+$bev_services = $spGenField3;
+$open_bar_service = $spGenField4;
+$open_bar_service_opts = $spGenField5;
+$cash_bar_drinks = $spGenField6;
+
+/* Logistics Fields */
+$spring_venue_mod = $spGenField7;
+$hudson_venue_mod = $spGenField8;
+
+?>
+
+
+
+
+
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<ul class="nav nav-pills price-pills">
+				<?php $controller->command("printLink", $currentDate, 'Current', $spPricingObject); ?>
+				<?php 
+				foreach($futureDates as $futureDate){
+					$controller->command("printLink", $futureDate, "", $spPricingObject);
+				}
+				?>
+				<?php if(!empty($pastDates)){ ?>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						Past
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+					<?php 
+					foreach($pastDates as $pastDate){
+						$controller->command("printLink", $pastDate, "", $spPricingObject);
+					}
+					?>
+					</ul>
+				</li>
+				<?php } ?>
+				<li><a href="#" id="addnew">Add</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<h4>
+			<?php if($currentDate == $spPricingObject->date()){ ?>
+				Current Pricing 
+				<small>Started <?php echo $spPricingObject->date()->format('F j, Y'); ?></small>
+			<?php } else if(in_array($spPricingObject->date(), $pastDates)){ ?>
+				Pricing Started <?php echo $spPricingObject->date()->format('F j, Y'); ?>
+			<?php } else { ?>
+				Pricing Starting <?php echo $spPricingObject->date()->format('F j, Y'); ?>
+			<?php } ?>
+			</h4>
+		</div>
+	</div>
+
+	<form method="post" id="event_pricing" action="event_pricing.php?d=<?php echo $_GET['d']; ?>" class="form-inline">
+
+	<?php /* Space Pricing */ ?>
+	<div class="row">
+		<div class="span12">
+			<h5>Space Pricing <small>per hour</small></h5>
+			<table class="table">
+				<?php
+				echo '<tr>';
+				foreach($spaces as $space){ 
+					echo "<td>".$space->title."</td>";
+				}
+				echo '</tr><tr>';
+				foreach($spaces as $space){
+				?>
+				<td>
+					<div class="input-prepend">
+						<span class="add-on">$</span>
+						<?php echo $spPricingObject->getField('text', 'space', $space->id, 'price'); ?>
+					</div>
+					<?php echo $spPricingObject->getField('hidden', 'space', $space->id, 'scheme', SCHEME_HOUR); ?>
+					<?php echo $spPricingObject->getField('hidden', 'space', $space->id, 'percent', 0); ?>
+				</td>
+				<?php
+				}
+				echo '</tr>';
+				?>
+			</table>
+		</div>
+	</div>
+
+	<?php /* Member Restriction Surcharges */ ?>
+	<div class="row">
+		<div class="span12">
+			<div class="row">
+				<div class="span6">
+					<h5>Member Restriction Surcharges</h5>
+					<div class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label" for="inputPassword">No Members Allowed</label>
+							<div class="controls">
+								<div class="input-prepend">
+									<span class="add-on">$</span>
+									<?php echo $spPricingObject->getField('text', 'member_restrictions', NO_MEMBERS, 'price'); ?>
+								</div>
+								<?php echo $spPricingObject->getField('hidden', 'member_restrictions', NO_MEMBERS, 'scheme', SCHEME_HOUR); ?>
+								<?php echo $spPricingObject->getField('hidden', 'member_restrictions', NO_MEMBERS, 'percent', 0); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputPassword">Member Limit Deduction</label>
+							<div class="controls">
+								<div class="input-prepend">
+									<span class="add-on">$</span>
+									<?php echo $spPricingObject->getField('text', 'member_restrictions', MEMBER_LIMIT, 'price'); ?>
+								</div>
+								<?php echo $spPricingObject->getField('hidden', 'member_restrictions', MEMBER_LIMIT, 'scheme', SCHEME_PERSON_HOUR); ?>
+								<?php echo $spPricingObject->getField('hidden', 'member_restrictions', MEMBER_LIMIT, 'percent', 0); ?>
+							</div>
+						</div>					
+					</div>
+				</div>
+				<div class="span6">
+					<h5>Member Guest Restriction Surcharges</h5>
+					<div class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label" for="inputPassword">No Guests Allowed</label>
+							<div class="controls">
+								<div class="input-prepend">
+									<span class="add-on">$</span>
+									<?php echo $spPricingObject->getField('text', 'member_restrictions', NO_GUESTS, 'price'); ?>
+								</div>
+								<?php echo $spPricingObject->getField('hidden', 'member_restrictions', NO_GUESTS, 'scheme', SCHEME_HOUR); ?>
+								<?php echo $spPricingObject->getField('hidden', 'member_restrictions', NO_GUESTS, 'percent', 0); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputPassword">Guest Limit Deduction</label>
+							<div class="controls">
+								<div class="input-prepend">
+									<span class="add-on">$</span>
+									<?php echo $spPricingObject->getField('text', 'member_restrictions', GUEST_LIMIT, 'price'); ?>
+								</div>
+								<?php echo $spPricingObject->getField('hidden', 'member_restrictions', GUEST_LIMIT, 'scheme', SCHEME_PERSON_HOUR); ?>
+								<?php echo $spPricingObject->getField('hidden', 'member_restrictions', GUEST_LIMIT, 'percent', 0); ?>
+							</div>
+						</div>					
+					</div>
+				</div>
+			</div>
+			<span class="help-block">Calculation for both members and guests: <code>surcharge = ({None Allowed} - {Member Limit}*{Deduction}) * hours</code></span>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="span6">
+			<h5>Member Dinner <small>flat</small></h5>
+			<div class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="inputPassword">No Member Dinner Allowed</label>
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on">$</span>
+							<?php echo $spPricingObject->getField('text', 'member_restrictions', NO_DINNER, 'price'); ?>
+						</div>
+						<?php echo $spPricingObject->getField('hidden', 'member_restrictions', NO_DINNER, 'scheme', SCHEME_FLAT); ?>
+						<?php echo $spPricingObject->getField('hidden', 'member_restrictions', NO_DINNER, 'percent', 0); ?>
+					</div>
+				</div>				
+			</div>
+		</div>		
+	</div>
+
+	<?php /* Food Pricing */ ?>
+	<h4>Food Pricing</h4>
+	<div class="row">
+		<div class="span4">
+			<h5>Item-Based Services</h5>
+			<?php echo $spPricingObject->getGenTable($food['item']['services']); ?>
+		</div>
+		<div class="span8" style="background-color:#eee;">
+			<h5>Item Choices</h5>
+			<?php $i = 0; ?>
+			<?php foreach($services = $food['item']['service_items'] as $service=>$items){ ?>
+				<?php if($i%2 == 0){ echo "<div class='row'>"; } ?>
+
+				<div class="span4">
+					<?php echo $spPricingObject->getGenTable($items); ?>
+				</div>
+
+				<?php if($i%2 == 1 || $i == count($food['item']['service_items'])-1){ echo "</div>"; } ?>
+				<?php $i++; ?>
+			<?php } ?>
+		</div>
+	</div>
+
+	<div class="row" style="padding-top:20px;">
+		<div class="span4">
+			<h5>Menu-Based Services</h5>
+			<?php echo $spPricingObject->getGenTable($food['menu']['services']); ?>
+		</div>
+		<div class="span8" style="background-color:#eee;">
+			<h5>Menu Choices</h5>
+			<?php $i = 0; ?>
+			<?php foreach($services = $food['menu']['service_menus'] as $service=>$menus){ ?>
+				<?php if($i%2 == 0){ echo "<div class='row'>"; } ?>
+
+				<div class="span4">
+					<?php echo $spPricingObject->getGenTable($menus); ?>
+				</div>
+
+				<?php if($i%2 == 1 || $i == count($food['menu']['service_menus'])-1){ echo "</div>"; } ?>
+				<?php $i++; ?>
+			<?php } ?>
+		</div>
+	</div>
+
+	<?php /* Bev Pricing */ ?>
+	<div class="row" style="padding-top:20px;">
+		<div class="span12">
+			<h4>Bev Pricing</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span4">
+			<?php echo $spPricingObject->getGenTable($bev_services); ?>
+		</div>
+		<div class="span4">
+			<?php echo $spPricingObject->getGenTable($open_bar_service); ?>
+		</div>
+		<div class="span4">
+			<?php echo $spPricingObject->getGenTable($open_bar_service_opts); ?>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span4">
+			<?php echo $spPricingObject->getGenTable($cash_bar_drinks); ?>
+		</div>
+	</div>
+
+
+	<?php /* Logistics Pricing */ ?>
+	<div class="row" style="padding-top:20px;">
+		<div class="span12">
+			<h4>Logistics Pricing</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span4">
+			<?php echo $spPricingObject->getGenTable($spring_venue_mod); ?>
+		</div>
+		<div class="span4">
+			<?php echo $spPricingObject->getGenTable($hudson_venue_mod); ?>
+		</div>
+		<div class="span4">
+			Default Special Logistics Fee
+			<div class="input-prepend">
+				<span class="add-on">$</span>
+				<?php echo $spPricingObject->getField('text', 'log_special', 1, 'price'); ?>
+			</div>
+			<?php echo $spPricingObject->getField('hidden', 'log_special', 1, 'scheme', SCHEME_FLAT); ?>
+			<?php echo $spPricingObject->getField('hidden', 'log_special', 1, 'percent', 0); ?>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="span12">
+			<input type="submit" name="save" value="Save" class="btn btn-primary">
+		</div>
+	</div>
+
+	</form>
+
+</div>
+<script>
+$(function(){
+	$("#addnew").click(function(e){
+		e.preventDefault()
+	}).pikaday({
+		onSelect: function(date){
+			var formatted = date.getFullYear() + '-';
+			formatted += ('0' + (date.getMonth()+1)).slice(-2) + '-'
+			formatted += ('0' + date.getDate()).slice(-2);
+			var form = $("<form action='event_pricing.php' method='post'>");
+			form.append($("<input type='text' name='new'>").val(formatted));
+			form.submit();
+		}
+	});
+});
+</script>

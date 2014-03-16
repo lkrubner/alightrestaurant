@@ -1,0 +1,688 @@
+<?php
+
+$occurrenceId = $controller->command("currentEditingId",'lk_occurrences');
+
+if ($occurrenceId) {
+
+$arrayOfOccurrences = $controller->command("databaseFetchSqlWithTrust", "select * from lk_occurrences where id=$occurrenceId", "admin_edit_occurrence.htm"); 
+$theOccurrenceForThisPage = $arrayOfOccurrences[0];
+$controller->arrayOfAllCarriedInfo["totalFormInputs"]["lk_occurrences"][$occurrenceId] = $theOccurrenceForThisPage;
+
+$wineQuery = "select * from lk_occurrences_lk_wines where lk_occurrence_id=$occurrenceId";
+$wineReferences = $controller->command("databaseFetchSqlWithTrust", $wineQuery, "admin_edit_occurrence.htm"); 
+  foreach ($wineReferences as $wr) {
+    $wineArray = $controller->command("databaseFetchSqlWithTrust", "select * from lk_wines where id={$wr['lk_wine_id']}", "admin_edit_occurrence.htm");
+    $wine = $wineArray[0];
+    $wines[] = $wine; 
+  }
+
+}
+
+$controller->command("setTotalFormInputsOwnersForTheseRecords"); 
+
+?>
+
+
+
+
+
+
+
+<div class="container">
+  <form id="lk_occurrences_form" action="/admin.php?page=<?php echo $controller->getVar("page"); ?>&type=<?php echo $controller->getVar("type"); ?>&editId=<?php if (isset($theOccurrenceForThisPage['id'])) echo $theOccurrenceForThisPage['id']; ?>" method="post">
+
+    <div class="modal-header">
+      <h3><?php echo ucfirst(str_replace('_', ' ', $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "type"))); ?></h3>
+    </div>
+
+    <div class="modal-body form-horizontal">
+
+
+      <?php if ($controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "type") == 'preview_dinner'): ?>
+
+      <h5>Preview Dinners are special in that a slot must be created for each party</h5>
+      <p>If you want to offer 4 Preview Dinners for one night, you must create 4 different Preview Dinner slots for that night.</p>
+
+      <?php endif ?>
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+
+ 	<label class="control-label" for="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][start_day]">Which day?</label>
+	<div class="controls">
+	  <div style="width: 400px; float:right;">
+	    Change the date? <input type="text" id="new_date_for_occurrence" name="new_date_for_occurrence">
+	  </div>
+	  <input type="text" id="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][start_day]" name="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][start_day]" value="<?php
+		if ($controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "start_day")) {
+                     echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "start_day");
+                } else {
+                     echo $controller->getVar("setStartDay");  
+                } ?>" />
+	</div>
+      </div>
+
+
+      <script>
+	$(function() {
+	$( "#new_date_for_occurrence" ).datepicker({ dateFormat: "yy-mm-dd" });
+	});
+      </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+ 	<label class="control-label" for="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][type]">Which type of event is this?</label>
+	<div class="controls">
+	  <select id="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][type]" name="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][type]">	  
+
+	    <?php if($controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "type")): ?>
+	    <option value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "type") ?>"><?php echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "type") ?></option>
+	    <?php else: ?>
+	    <option value="<?php echo $_GET['type']; ?>"><?php echo $_GET['type']; ?></option>
+	    <?php endif ?>
+	    <option value="member_dinner">Member Dinner</option>
+	    <option value="special_event">Special Event</option>
+	    <option value="preview_dinner">Preview Dinner</option>
+	    <option value="member_interview">Member Interview</option>
+	    <option value="member_orientation">Member Orientation</option>
+	    <option value="event_client_walk_through">Event Client Walk Through</option>
+	    <option value="staff_interview">Staff Interview</option>
+	  </select>
+	  
+	</div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][name]">Name for this event</label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][name]" name="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][name]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "name"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][description]">Description</label>
+	<div class="controls">
+	  <input type="text" id="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][description]" name="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][description]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "description"); ?>" />
+	</div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="control-group">
+	<label class="control-label" for="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][end]">Max Guests (defalut is 10 per half hour)</label>
+	<div class="controls">
+	  <table class="table table-condensed" style="margin-bottom:0;">
+	    <tr>
+	      <th><small>Per Half Hour</small></th>
+	    </tr>
+	    <tr>
+	      <td><input type="text" name="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][max_halfhour]" class="input-mini" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "max_halfhour"); ?>" /></td>
+	    </tr>
+	  </table>
+	</div>
+      </div>
+      <div class="control-group">
+	<label class="control-label" for="occurrence_start">First Seating</label>
+	<div class="controls">
+	  <input type="hidden" name="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][start]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "start"); ?>" />
+	  <?php
+	     $startDay = $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "start_day"); 
+	     $start = $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "start"); 
+	     if ($startDay && $start) echo date('g A', strtotime("$startDay $start")); 
+	     ?>       
+	  <select id="occurrence_start" name="occurrence_start" class="auto-width">
+	    <option></option>
+	    <option value='12:00'>12:00</option>
+	    <option value='12:30'>12:30</option>
+	    <option value='1:00'>1:00</option>
+	    <option value='1:30'>1:30</option>
+	    <option value='2:00'>2:00</option>
+	    <option value='2:30'>2:30</option>
+	    <option value='3:00'>3:00</option>
+	    <option value='3:30'>3:30</option>
+	    <option value='4:00'>4:00</option>
+	    <option value='4:30'>4:30</option>
+	    <option value='5:00'>5:00</option>
+	    <option value='5:30'>5:30</option>
+	    <option value='6:00'>6:00</option>
+	    <option value='6:30'>6:30</option>
+	    <option value='7:00'>7:00</option>
+	    <option value='7:30'>7:30</option>
+	    <option value='8:00'>8:00</option>
+	    <option value='8:30'>8:30</option>
+	    <option value='9:00'>9:00</option>
+	    <option value='9:30'>9:30</option>
+	    <option value='10:00'>10:00</option>
+	    <option value='10:30'>10:30</option>
+	    <option value='11:00'>11:00</option>
+	    <option value='11:30'>11:30</option>
+	  </select>
+	  <select name="start_merediem" class="auto-width">
+	    <option value='AM'>AM</option>
+	    <option selected='selected' value='PM'>PM</option>
+	  </select>
+	</div>
+      </div>
+      <div class="control-group">
+	<label class="control-label" for="occurrence_end">Last Seating</label>
+	<div class="controls">
+	  <input type="hidden" name="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][end]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "end"); ?>" />
+	  <?php
+	     $startDay = $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "start_day"); 
+	     $end = $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "end"); 
+	     if ($startDay && $end) echo date('g A', strtotime("$startDay $end")); 
+	     ?>
+	  <select id="occurrence_end" name="occurrence_end" class="auto-width">
+	    <option></option>
+	    <option value='12:00'>12:00</option>
+	    <option value='12:30'>12:30</option>
+	    <option value='1:00'>1:00</option>
+	    <option value='1:30'>1:30</option>
+	    <option value='2:00'>2:00</option>
+	    <option value='2:30'>2:30</option>
+	    <option value='3:00'>3:00</option>
+	    <option value='3:30'>3:30</option>
+	    <option value='4:00'>4:00</option>
+	    <option value='4:30'>4:30</option>
+	    <option value='5:00'>5:00</option>
+	    <option value='5:30'>5:30</option>
+	    <option value='6:00'>6:00</option>
+	    <option value='6:30'>6:30</option>
+	    <option value='7:00'>7:00</option>
+	    <option value='7:30'>7:30</option>
+	    <option value='8:00'>8:00</option>
+	    <option value='8:30'>8:30</option>
+	    <option value='9:00'>9:00</option>
+	    <option value='9:30'>9:30</option>
+	    <option value='10:00'>10:00</option>
+	    <option value='10:30'>10:30</option>
+	    <option value='11:00'>11:00</option>
+	    <option value='11:30'>11:30</option>	    
+	  </select>
+	  <select name="end_merediem" class="auto-width">
+	    <option value='AM'>AM</option>
+	    <option selected='selected' value='PM'>PM</option>
+	  </select>
+	</div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+    <?php 
+       $occurrenceType = $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "occurrence_type");
+       if (!$occurrenceType) $occurrenceType = $controller->getVar("type");
+    ?>
+
+
+
+
+<?php if($occurrenceId): ?>
+
+    <fieldset>
+      <legend>Reservations</legend>
+
+      <?php $reservations = $controller->command("databaseFetchSqlWithTrust", "select * from lk_reservations where lk_occurrence_id = ".$controller->command("currentEditingId",'lk_occurrences'), "admin_edit_occurrence.htm"); ?>
+
+      <div class="row">
+      <?php foreach ($reservations as $r): ?>
+	<div class="span3">
+	  <div class="well well-small small">
+	    <p style="margin-bottom:0;" class="text-right">
+	      <?php echo date('g A', strtotime($r["at_what_time_does_the_member_plan_to_arrive"])); ?></p>
+	    <p><strong>
+		<?php $thisUser = $controller->command("rowGetWithTrust", "users", $r["user_id"]); ?>
+
+	           <a href="/admin.php?page=admin_edit_user&editId=<?php echo $thisUser['user_id'] ?>"><?php echo $thisUser['first_name'] ?> <?php echo $thisUser['last_name'] ?></a><br>
+
+	      </strong>
+	      <br>
+	      <strong>G:</strong>
+	      <?php 
+		 $allGuestsForThisOneReservation = $controller->command("databaseFetchSqlWithTrust", "select * from lk_guests where lk_reservation_id={$r["id"]}", "admin_edit_occurrence.htm");
+	         foreach ($allGuestsForThisOneReservation as $guest):
+	           $thisUser = $controller->command("rowGetWithTrust", "users", $guest["user_id"]); ?>
+	
+	           <a href="/admin.php?page=admin_edit_user&editId=<?php echo $thisUser['user_id'] ?>"><?php echo $thisUser['first_name'] ?> <?php echo $thisUser['last_name'] ?></a><br>
+
+
+              <?php endforeach ?>
+	    </p>
+	  </div>
+	</div>
+
+      <?php endforeach ?>
+      </div>
+
+    </fieldset>
+
+
+<?php endif ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <fieldset>
+      <legend>Food Information</legend>
+      <div class="courses">
+	<?php $query = "select * from lk_courses where lk_occurrence_id=".$controller->command("currentEditingId",'lk_occurrences')." order by id" ?>
+	<?php $courses = $controller->command("databaseFetchSqlWithTrust", $query, "admin_edit_occurrence.htm"); ?>
+	<?php $iteratorForCourses = 1; ?>
+	<?php foreach ($courses as $c): ?>
+
+	<div class="well well-small course-info" style="background-color:#fff; border-color: #000;">
+	  <input type="hidden" name="totalFormInputs[lk_courses][<?php echo $c['id']; ?>][lk_occurrence_id]" value="<?php echo $c['lk_occurrence_id']; ?>">
+	  <p><strong><?php echo $c['name']; ?></strong>  &nbsp; &nbsp; &nbsp;   <small><a class="remove-wine" onclick="deleteThisItem('lk_courses', <?php echo $c['id']; ?>); return false;" href="#">Remove</a></small></p>
+	  <table class="broad_table">
+	    <tr>
+	      <td>
+		<label for="totalFormInputs[lk_courses][<?php echo $c['id']; ?>][name]">Title</label>
+		<input class="course-title" type="text" id="totalFormInputs[lk_courses][<?php echo $c['id']; ?>][name]" name="totalFormInputs[lk_courses][<?php echo $c['id']; ?>][name]" value="<?php echo $c['name']; ?>">
+	      </td>
+	    </tr>
+	  </table>
+	</div>
+
+
+	<div class="row-fluid">
+	  <div class="span10 offset1 course-options">
+	    <?php $query = "select * from lk_foods where lk_course_id={$c['id']} order by id" ?>
+	    <?php $arrayOfFoodsForThisCourse = $controller->command("databaseFetchSqlWithTrust", $query, "admin_edit_occurrence.htm"); ?>
+	    <?php
+	    $iteratorForFoods = 1; 
+	    foreach ($arrayOfFoodsForThisCourse as $f): 
+	    if ($c['id'] == $f['lk_course_id']):
+	    ?>
+	    
+	    <div class="well well-small option-info">
+	      <input type="hidden" name="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][lk_course_id]" value="<?php echo $c['id']; ?>">
+	      <p><strong>Option <?php echo $iteratorForFoods; ?></strong> &nbsp; &nbsp; &nbsp;   <small><a class="remove-wine" onclick="deleteThisItem('lk_foods', <?php echo $f['id']; ?>); return false;" href="#">Remove</a></small></p>
+	      <table width="100%">
+		<tbody>
+		  <tr>
+		    <td width="50%">
+		      <label for="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][name]">Name</label>
+		      <input class="course-title" type="text" id="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][name]" name="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][name]" value="<?php if ($f['name']): echo $f['name']; else: echo ""; endif; ?>">
+		    </td>
+		    <td width="50%">
+		      <label for="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][chef]">Chef</label>
+		      <input type="text" id="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][chef]" name="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][chef]" value="<?php if ($f['chef']): echo $f['chef']; else: echo ""; endif; ?>">
+		    </td>
+		  </tr>
+		  <tr>
+		    <td colspan="2">
+		      <label for="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][description]">Description</label>
+		      <textarea class="input-block-level option-description" rows="3" id="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][description]" name="totalFormInputs[lk_foods][<?php echo $f['id']; ?>][description]"><?php if ($f['description']): echo $f['description']; else: echo ""; endif; ?></textarea>
+		    </td>
+		  </tr>
+		</tbody>
+	      </table>
+	    </div>
+	    <?php $iteratorForFoods++; ?>
+	    <?php endif ?>
+	    <?php endforeach ?>
+
+
+	    <div class="well well-small option-info">
+	      <input type="hidden" name="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][lk_course_id]" value="<?php echo $c['id']; ?>">
+	      <p><strong>Option </strong></p>
+	      <select name="specialMethodForAddingFoodToACourse[<?php echo $c['id']; ?>]">
+		<option></option>
+		<?php echo $controller->command("getFoodsInSelectBox"); ?>
+	      </select> Pick a food, or type one out.
+	      <table width="100%">
+		<tbody>
+		  <tr>
+		    <td width="50%">
+		      <label for="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][name]">Name</label>
+		      <input class="course-title" type="text" id="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][name]" name="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][name]" value="">
+		    </td>
+		    <td width="50%">
+		      <label for="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][chef]">Chef</label>
+		      <input type="text" id="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][chef]" name="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][chef]" value="">
+		    </td>
+		  </tr>
+		  <tr>
+		    <td colspan="2">
+		      <label for="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][description]">Description</label>
+		      <textarea class="input-block-level option-description" rows="3" id="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][description]" name="specialNameForNewFoodOptions[<?php echo $iteratorForCourses; ?>][description]"></textarea>
+		    </td>
+		  </tr>
+		</tbody>
+	      </table>
+	    </div>
+
+	    
+	  </div>
+	</div>
+
+	<div class="well well-small">
+	  <p>+ Add a new option by hitting the <a href="#save_occurrence">Save</a> button below.</p>
+	</div>
+
+	<?php $iteratorForCourses++; ?>
+	<?php endforeach ?>
+      </div>
+
+
+
+      <?php $controller->command("rowCreate", "lk_courses", array("id" => '')); $newCourseId = $controller->arrayOfAllCarriedInfo["new_database_id"]; ?>
+
+
+      <div class="well well-small course-info" style="background-color:#fff; border-color: #000;">
+	  <input type="hidden" name="totalFormInputs[lk_courses][<?php echo $newCourseId; ?>][lk_occurrence_id]" value="<?php echo $controller->command("currentValueForTotalFormInputs","lk_occurrences", $controller->command("currentEditingId",'lk_occurrences'), "id") ?>">
+	  <p><strong>(Write a title below)</strong></p>
+	  <table class="broad_table">
+	    <tr>
+	      <td>
+		<label for="totalFormInputs[lk_courses][<?php echo $newCourseId; ?>][name]">Title</label>
+		<input class="course-title" type="text" id="totalFormInputs[lk_courses][<?php echo $newCourseId; ?>][name]" name="totalFormInputs[lk_courses][<?php echo $newCourseId; ?>][name]" value=""> <br>
+		You must write a title or this course will not be saved.
+	      </td>
+	    </tr>
+	  </table>
+	</div>
+
+	    <div class="well well-small option-info">
+	      <input type="hidden" name="totalFormInputs[lk_foods][0][lk_course_id]" value="<?php echo $newCourseId; ?>">
+	      <p><strong>Option </strong></p>
+	      <select name="specialMethodForAddingFoodToACourse[<?php echo $newCourseId; ?>]">
+		<option></option>
+		<?php echo $controller->command("getFoodsInSelectBox"); ?>
+	      </select> Pick a food, or type one out.
+	      <table width="100%">
+		<tbody>
+		  <tr>
+		    <td width="50%">
+		      <label for="totalFormInputs[lk_foods][0][name]">Name</label>
+		      <input class="course-title" type="text" id="totalFormInputs[lk_foods][0][name]" name="totalFormInputs[lk_foods][0][name]" value="">
+		    </td>
+		    <td width="50%">
+		      <label for="totalFormInputs[lk_foods][0][chef]">Chef</label>
+		      <input type="text" id="totalFormInputs[lk_foods][0][chef]" name="totalFormInputs[lk_foods][0][chef]" value="">
+		    </td>
+		  </tr>
+		  <tr>
+		    <td colspan="2">
+		      <label for="totalFormInputs[lk_foods][0][description]">Description</label>
+		      <textarea class="input-block-level option-description" rows="3" id="totalFormInputs[lk_foods][0][description]" name="totalFormInputs[lk_foods][0][description]"></textarea>
+		    </td>
+		  </tr>
+		</tbody>
+	      </table>
+	    </div>
+
+
+
+
+
+      <div class="add-course-container well well-small" style="background-color:#fff; border-color: #000;">
+	<p>+ Add a new course by hitting the <a href="#save_occurrence">Save</a> button below.</p>
+      </div>
+
+    </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+    <fieldset>
+      <legend>Suggested Wine</legend>
+
+      <div class="container">
+	<div class="row dinner-wines">
+
+	  <?php foreach ($wines as $w): ?>
+
+	  <div class="span3 dinner-wine">
+	    <div class="well well-small">
+	      <p><small style="font-weight:bold;" class="wine-name"><?php echo $w['name']; ?> - <?php echo $w['vintage']; ?></small></p>
+	      <table style="width:100%;">
+		<tbody>
+		  <tr>
+		    <td style="width:50%">
+		      <small>Regular Price</small>
+		    </td>
+		    <td style="width:50%">
+		      <small>Dinner Price</small>
+		    </td>
+		  </tr>
+		  <tr>
+		    <td class="reg-price">
+		      $<?php echo $w['price']; ?>
+		    </td>
+		    <td>
+		      <div class="input-prepend" style="margin-bottom:0;">
+			<span class="add-on">$</span>
+			<input type="text" value="" class="special-price" style="width:40px;">
+		      </div>
+		    </td>
+		  </tr>
+		</tbody>
+	      </table>
+
+	      <small><a class="remove-wine" onclick="deleteThisItem('lk_occurrences', <?php echo $w['id']; ?>, 'lk_wines'); return false;" href="#">Remove</a></small>
+
+	    </div>
+	  </div>
+
+	  <?php endforeach ?>
+
+	</div>
+
+	<div class="row">
+	  <div class="span12">
+	    <table>
+	      <tr>
+		<td>
+		  <select name="new_wine_for_occurrence_1">
+		    <option></option>
+		    <?php echo $controller->command("getAllWinesInASelectBox"); ?>
+		  </select>
+		</td>
+		<td id="free_form_search_area_for_wines">
+		  Or search: <input type="text" id="new_wine_for_occurrence_2" name="new_wine_for_occurrence_2">
+		</td>
+	      </tr>
+	    </table>
+	  </div>
+	</div>
+      </div>
+    </fieldset>
+
+
+    <script>
+      $(function() {
+      var availableTags = [
+      <?php echo $controller->command("getAllWinesInAJavascriptArray"); ?>
+      ];
+      $( "#new_wine_for_occurrence_2" ).autocomplete({
+      source: availableTags
+      });
+      });
+    </script>
+
+
+
+
+
+
+
+
+
+    <hr class="legend">
+
+
+
+
+
+    <input name="save" class="btn btn-primary" id="save_occurrence" value="Save" type="submit">
+
+
+    <script>
+      function changeChoiceMadeToClone() {
+      $('#choiceMadeMainAction').val('cloneOccurrence'); 
+      $('#choiceMadeSecondaryAction').val('cancelAction'); 
+      document.getElementById('lk_occurrences_form').submit(); 
+      }
+    </script>
+
+    <a href="/admin.php?page=admin_calendar" class="btn" onclick="changeChoiceMadeToClone(); return false;">Clone (save first or your changes will be lost)</a>
+
+
+
+
+
+    
+    <a href="#remove" class="btn btn-danger pull-right"  onclick="deleteThisItem('lk_occurrences', <?php echo $theOccurrenceForThisPage['id']; ?>); return false;" id="delete-btn">Delete Dinner</a>
+
+
+
+
+
+
+    <input type="hidden" id="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][user_id]" name="totalFormInputs[lk_occurrences][<?php echo $controller->command("currentEditingId",'lk_occurrences'); ?>][user_id]" value="<?php echo $controller->command("getUserIdFromUserLoggedInTable"); ?>" />
+
+
+    <input type="hidden" id="choiceMadeMainAction" name="choiceMade[]" value="createRecordsForMultipleDatabaseTables" />
+
+    <input type="hidden" id="choiceMadeSecondaryAction" name="choiceMade[]" value="linkTheIdsOfReservationsCoursesFoodsAndWinesForThisOccurrence" />
+
+    <input type="hidden" name="choiceMade[]" value="databaseDeleteAllItemsInDeleteArray" />
+
+    <input type="hidden" name="choiceMade[]" value="specialMethodForAddingFoodToACourseSave" />
+
+    <input type="hidden" name="choiceMade[]" value="processInputSoThatBlankCoursesAndFoodOptionsAreNotAddedToTheDatabase" />
+
+    <input type="hidden" name="processInputWithTheseFunctions[]" value="processInputSoThatTimeInputsAreFormattedInTheFormatThatTheDatabaseExpects" />
+
+    <input type="hidden" name="processInputWithTheseFunctions[]" value="processInputAddNewDateIfUserHasPickedANewDate" />
+
+    <input type="hidden" name="formName" value="admin_edit_occurrence.htm" />
+
+  </form>
+</div>

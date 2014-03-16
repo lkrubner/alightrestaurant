@@ -1,0 +1,120 @@
+<?php
+
+
+
+if(isset($_POST['add'])){
+	$sql = "
+		INSERT INTO fb_chef (
+			fb_chef_name,
+			is_default,
+			default_order
+		) VALUES (
+			'".addslashes($_POST['name'])."',
+			1,
+			(
+				SELECT IF(
+					MAX(c.default_order) IS NULL, 
+					1, 
+					MAX(c.default_order)+1
+				) 
+				FROM fb_chef c 
+				WHERE c.is_default=1
+			)
+		)";
+        $controller->command("makeQuery", $sql, "admin_default_chefs.htm"); 
+}
+
+if(isset($_POST['remove'])){
+	$sql = "
+		UPDATE fb_chef 
+		SET is_default=0, default_order=0
+		WHERE fb_chef_id=".addslashes($_POST['chef_id']);
+        $controller->command("makeQuery", $sql, "admin_default_chefs.htm"); 
+}
+
+if(isset($_POST['save'])){
+
+	for($i = 0; $i < count($_POST['chef_id']); $i++){
+		$sql = "
+			UPDATE fb_chef 
+			SET default_order=".addslashes($_POST['order'][$i])."
+			WHERE fb_chef_id=".addslashes($_POST['chef_id'][$i]);
+                $controller->command("makeQuery", $sql, "admin_default_chefs.htm"); 
+	}
+}
+
+$sql = "SELECT * FROM fb_chef WHERE is_default=1 ORDER BY default_order, fb_chef_id ASC";
+$result = $controller->command("makeQuery", $sql, "admin_default_chefs.htm"); 
+
+$chefs = array();
+while($row = mysql_fetch_object($result)) {
+	$chefs[] = $row;
+}
+
+?>
+
+
+<div class="container">
+	<div class="row">
+		<div class="span6">
+			<?php if(count($chefs) != 0){ ?>
+			<h4>Default Chefs</h4>
+			<form action="default_chefs.php" method="post">
+				<table class="table">
+					<tr>
+						<th width="50%">Chef Name</th>
+						<th width="25%">Order</th>
+						<th width="25%"></th>
+					</tr>
+				<?php foreach($chefs as $chef){ ?>
+					<tr>
+						<td><?php echo $chef->fb_chef_name; ?></td>
+						<td>
+							<input type="text" class="input-mini" value="<?php echo $chef->default_order; ?>" name="order[]">
+							<input type="hidden" value="<?php echo $chef->fb_chef_id; ?>" name="chef_id[]">
+						</td>
+						<td>
+							<div class="text-right">
+							<a href="#" class="btn btn-danger remove" data-id="<?php echo $chef->fb_chef_id; ?>">Remove</a>
+							</div>
+						</td>
+					</tr>
+				<?php } ?>
+					<tr>
+						<td></td>
+						<td>
+							<?php
+							//Little hack to make sure "save" gets sent through, since other buttons
+							//are in the form
+							?>
+							<input type="hidden" name="save" value="true">
+							<input type="submit" name="submit" class="btn" value="Reorder">
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+			<?php } ?>
+
+			<h4>Add a Default Chef</h4>
+			<form action="default_chefs.php" method="post" class="form-inline">
+				<input type="text" name="name" palceholder="Chef Name..." value="">
+				<input type="submit" name="add" class="btn" value="Add">
+			</form>
+		</div>
+	</div>
+</div>
+
+<form action="default_chefs.php" id="remove-form" method="post" class="hide">
+	<input type="hidden" class="remove-id" name="chef_id" value="">
+	<input type="hidden" name="remove" value="true">
+</form>
+
+<script>
+$(".remove").click(function(e){
+	console.log("here");
+	$(".remove-id").val($(this).data('id'));
+	$("#remove-form").submit();
+	return false;
+});
+</script>

@@ -1,0 +1,72 @@
+
+<div class="res">
+
+
+
+  <?php $loggedInId = $controller->command("getUserIdFromUserLoggedInTable"); ?>
+
+
+
+
+
+  <article>
+
+
+
+    <section>
+      
+      <h4 style="font-size:28px;">Your Reservations</h4>
+
+      <div class="hr"></div>
+
+
+
+
+      <?php 
+
+	 $query = "SELECT * FROM lk_reservations WHERE user_id='$loggedInId' ";
+	 $thisUsersReservations = $controller->command("databaseFetchSqlWithTrust", $query, "private_reservations.htm"); 
+         $arrayOfMemberDinnersThatThisUserHasAReservationFor = array(); 
+         foreach ($thisUsersReservations as $r) { $arrayOfMemberDinnersThatThisUserHasAReservationFor[$r['id']] = $r['lk_occurrence_id'];  }
+
+        $today = date('Y-m-d');
+        $query = "
+        SELECT o.id as oid, o.name, o.description, o.start_day
+        FROM lk_occurrences o 
+        WHERE o.type = 'member_dinner' and o.start_day > '$today'
+        ORDER BY o.start_day
+        ";
+        $memberDinners = $controller->command("databaseFetchSqlWithTrust", $query, "private_reservations.htm"); 
+      ?>
+
+
+
+      <?php foreach($memberDinners as $md): ?>
+
+      <?php if (in_array($md['oid'], $arrayOfMemberDinnersThatThisUserHasAReservationFor)): ?>
+
+      <?php $reservationId = array_search($md['oid'], $arrayOfMemberDinnersThatThisUserHasAReservationFor); ?>
+
+      <?php $dateToBeShown = date('l, F j', strtotime($md['start_day'])); ?>
+      <?php $idForDinnerForm = "reservation-dinner-" . $md['oid']; ?>
+      <?php $idForBottleForm = "reservation-bottle-" . $md['oid']; ?>
+
+      <h4><?php echo $dateToBeShown ?></h4>
+
+      <a href="/private.php?page=private_reservations_each&reservationId=<?php echo $reservationId ?>" class="button-custom btn_left"><span>View Reservation</span></a>
+
+
+      <a href="/private.php?page=private_reservations&reservationId=<?php echo $reservationId ?>&choiceMade[]=databaseDeleteReservation" class="button-custom btn_right"><span>Cancel Reservation</span></a>
+
+      <br><br><br>
+
+      <?php endif ?>
+
+      <?php endforeach ?>
+
+
+    </section>
+  </article>
+
+</div>
+

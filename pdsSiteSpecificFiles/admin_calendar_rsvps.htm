@@ -1,0 +1,366 @@
+<?php
+   $loggedInId = $controller->command("getUserIdFromUserLoggedInTable");	
+if (!$loggedInId) {
+$controller->command("renderPartial", "login.htm"); 
+} else {
+
+$controller->import("formatCalendarDayDate", "admin_calendar_rsvps.htm"); 
+
+
+$query = "select * from lk_reservations where user_id in (select user_id from users where active is not null)";
+$reservations = $controller->command("databaseFetchSqlWithTrust", $query, "admin_calendar_rsvps.htm");
+
+$monthToShow = $controller->getVar("monthToShow");
+if (!$monthToShow) $monthToShow = date ('Y-m'); 
+$theStartOfTheMonthWeWillShowAsSeconds = strtotime($monthToShow); 
+$lastMonthAsString = date ('Y-m', $theStartOfTheMonthWeWillShowAsSeconds - 1); 
+$nextMonthAsString = date ('Y-m', $theStartOfTheMonthWeWillShowAsSeconds + 2678400); 
+$theStartOfTodayInSeconds = strtotime(date ('Y-m-d'));
+
+$days = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+
+$dayOfWeekThatTheMonthStarts = date ('l', $theStartOfTheMonthWeWillShowAsSeconds); 
+
+$howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday = array_search($dayOfWeekThatTheMonthStarts, $days); 
+?>
+
+
+
+<?php $controller->command("showUserMessages"); ?>
+
+
+
+
+<div class="container">
+
+<h2>This calendar shows the reservations made by non-members</h2>
+
+
+  <div class="row">
+    <div class="span12">
+
+
+
+      <table id="admin_calendar_legend">
+	<tr>
+	  <td class="member_dinner">Member Dinner</td>
+	  <td class="special_event">Special Event</td>
+	  <td class="event_client_walk_through">Event client walk through</td>
+	  <td class="staff_interview">Staff interview</td>
+	</tr>
+      </table>
+
+
+
+
+      <h4 style="text-align:center;">
+	<a href="/admin.php?page=admin_calendar_rsvps&monthToShow=<?php echo $lastMonthAsString ?>">&laquo;</a>
+	<?php echo $controller->command("formatCalendarDates",'F Y', $theStartOfTheMonthWeWillShowAsSeconds); ?>
+	<a href="/admin.php?page=admin_calendar_rsvps&monthToShow=<?php echo $nextMonthAsString ?>">&raquo;</a>
+      </h4>
+
+
+
+
+
+
+
+
+
+      <table class="table table-bordered table-condensed calendar">
+
+	<tr>
+	  <th>Sunday</th>
+	  <th>Monday</th>
+	  <th>Tuesday</th>
+	  <th>Wednesday</th>
+	  <th>Thursday</th>
+	  <th>Friday</th>
+	  <th>Saturday</th>
+	</tr>
+
+
+	<?php for ($possibleDays=0; $possibleDays < 42; $possibleDays++): ?>
+
+	      <?php
+		 $theStartOfThisParticularDayInSeconds = 0;
+		 if ($possibleDays >= $howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday): 
+	           $howManySecondsSinceTheStartOfTheMonth = 86400 * ($possibleDays - $howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday);
+	           $theStartOfThisParticularDayInSeconds = $theStartOfTheMonthWeWillShowAsSeconds + $howManySecondsSinceTheStartOfTheMonth; 
+	         endif 
+	      ?>
+
+	<?php if($possibleDays%7 == 0): ?>
+	   <tr>
+	<?php endif ?>
+
+
+
+
+
+	  <?php if($theStartOfThisParticularDayInSeconds < $theStartOfTodayInSeconds): ?>
+	    <td style="background-color:#eee;padding-bottom:4px;" data-date="<?php echo $controller->command("formatCalendarDates",'Y-m-d', $theStartOfThisParticularDayInSeconds); ?>">
+	  <?php else: ?>
+	    <td data-date="<?php echo $controller->command("formatCalendarDates",'Y-m-d', $theStartOfThisParticularDayInSeconds); ?>">
+	  <?php endif ?>
+
+
+	    
+	    <?php if ($controller->command("formatCalendarDates",'Y-m', $theStartOfThisParticularDayInSeconds)==$monthToShow): ?>
+
+
+
+	    <div class="text-right"><?php echo $controller->command("formatCalendarDates",'j', $theStartOfThisParticularDayInSeconds); ?></div>
+
+
+
+
+	    <?php foreach($reservations as $r): ?>
+	    <?php if ($controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds) == substr($r['at_what_time_does_the_member_plan_to_arrive'], 0, 10)): ?>
+	    <?php $o = $controller->command("rowGetWithTrust", "lk_occurrences", $r["lk_occurrence_id"]); ?>
+	    <?php $u = $controller->command("rowGetWithTrust", "users", $r["user_id"]); ?>
+	    <?php if($u["active"]):?>
+	    <a href="/admin.php?page=admin_edit_user&editId=<?php echo $u['user_id']; ?>" data-event-id="<?php echo $o['id']; ?>" class="event <?php echo $o['type'];; ?>">
+	      <div class="time"><?php echo $u["first_name"]; ?> <?php echo $u["last_name"]; ?> arriving at <?php echo $r["at_what_time_does_the_member_plan_to_arrive"]; ?></div>
+	      <div class="title"><?php echo $o['name']; ?></div>
+	    </a>
+	    <?php endif ?>
+	    <?php endif ?>
+	    <?php endforeach ?>
+
+
+
+
+
+
+	  <?php endif ?>
+	  </td>
+
+
+	  <?php if($possibleDays%7 == 6){ ?>
+	   </tr>
+	  <?php } ?>
+
+	<?php endfor ?>
+      </table>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+
+
+
+
+<?php
+$monthToShow = $nextMonthAsString;
+
+$theStartOfTheMonthWeWillShowAsSeconds = strtotime($monthToShow); 
+$lastMonthAsString = date ('Y-m', $theStartOfTheMonthWeWillShowAsSeconds - 1); 
+$nextMonthAsString = date ('Y-m', $theStartOfTheMonthWeWillShowAsSeconds + 2678400); 
+$theStartOfTodayInSeconds = strtotime(date ('Y-m-d'));
+
+$days = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+
+$dayOfWeekThatTheMonthStarts = date ('l', $theStartOfTheMonthWeWillShowAsSeconds); 
+
+$howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday = array_search($dayOfWeekThatTheMonthStarts, $days); 
+?>
+
+
+
+<?php $controller->command("showUserMessages"); ?>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+
+
+
+
+      <h4 style="text-align:center;">
+	<a href="/admin.php?page=admin_calendar_rsvps&monthToShow=<?php echo $lastMonthAsString ?>">&laquo;</a>
+	<?php echo $controller->command("formatCalendarDates",'F Y', $theStartOfTheMonthWeWillShowAsSeconds); ?>
+	<a href="/admin.php?page=admin_calendar_rsvps&monthToShow=<?php echo $nextMonthAsString ?>">&raquo;</a>
+      </h4>
+
+
+
+
+
+
+
+
+
+      <table class="table table-bordered table-condensed calendar">
+
+	<tr>
+	  <th>Sunday</th>
+	  <th>Monday</th>
+	  <th>Tuesday</th>
+	  <th>Wednesday</th>
+	  <th>Thursday</th>
+	  <th>Friday</th>
+	  <th>Saturday</th>
+	</tr>
+
+
+	<?php for ($possibleDays=0; $possibleDays < 35; $possibleDays++): ?>
+
+	      <?php
+
+
+
+		 if ($possibleDays >= $howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday): 
+	           $howManySecondsSinceTheStartOfTheMonth = 86400 * ($possibleDays - $howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday);
+	           $theStartOfThisParticularDayInSeconds = $theStartOfTheMonthWeWillShowAsSeconds + $howManySecondsSinceTheStartOfTheMonth; 
+	         endif 
+	      ?>
+
+	<?php if($possibleDays%7 == 0): ?>
+	   <tr>
+	<?php endif ?>
+
+
+
+
+
+	  <?php if($theStartOfThisParticularDayInSeconds < $theStartOfTodayInSeconds): ?>
+	    <td style="background-color:#eee;padding-bottom:4px;" data-date="<?php echo $controller->command("formatCalendarDates",'Y-m-d', $theStartOfThisParticularDayInSeconds); ?>">
+	  <?php else: ?>
+	    <td data-date="<?php echo $controller->command("formatCalendarDates",'Y-m-d', $theStartOfThisParticularDayInSeconds); ?>">
+	  <?php endif ?>
+
+
+	    
+	    <?php if($controller->command("formatCalendarDates",'Y-m', $theStartOfThisParticularDayInSeconds)==$monthToShow): ?>
+
+
+
+	    <div class="text-right"><?php echo $controller->command("formatCalendarDates",'j', $theStartOfThisParticularDayInSeconds); ?></div>
+
+
+
+
+
+	    <?php foreach($reservations as $r): ?>
+	    <?php if ($controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds) == substr($r['at_what_time_does_the_member_plan_to_arrive'], 0, 10)): ?>
+	    <?php $o = $controller->command("rowGetWithTrust", "lk_occurrences", $r["lk_occurrence_id"]); ?>
+	    <?php $u = $controller->command("rowGetWithTrust", "users", $r["user_id"]); ?>
+	    <a href="/admin.php?page=admin_edit_user&editId=<?php echo $u['user_id']; ?>" data-event-id="<?php echo $o['id']; ?>" class="event <?php echo $o['type'];; ?>">
+	      <div class="time"><?php echo $u["first_name"]; ?> <?php echo $u["last_name"]; ?> arriving at <?php echo $r["at_what_time_does_the_member_plan_to_arrive"]; ?></div>
+	      <div class="title"><?php echo $o['name']; ?></div>
+	    </a>
+	    <?php endif ?>
+	    <?php endforeach ?>
+
+
+
+
+
+
+
+	  <?php endif ?>
+	  </td>
+
+
+	  <?php if($possibleDays%7 == 6){ ?>
+	   </tr>
+	  <?php } ?>
+
+	<?php endfor ?>
+      </table>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php } // closes if(!$loggedInId)   ?>
+
+

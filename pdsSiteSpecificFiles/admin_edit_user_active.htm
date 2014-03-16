@@ -1,0 +1,34 @@
+
+
+<div class="container">
+
+<h3>These users are members:</h3>
+
+<p>(In other words, their accounts are not yet marked 'active'.)</p>
+
+
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "select user_id, first_name, last_name, email from users where active is null order by user_id", "admin_edit_user_not_active.htm"); ?>
+
+<p>There are 
+<?php 
+echo count($items); 
+?>  
+ users who are active members.</p>
+
+
+
+
+<hr>
+
+<?php foreach($items as $i): ?>
+   <p><a href="/admin.php?page=admin_edit_user&editId=<?php echo $i['user_id']; ?>"><?php echo $i['first_name']; ?> <?php echo $i['last_name']; ?> <?php echo $i['email']; ?> </a></p>
+<?php endforeach ?>
+
+
+
+</div>
+
+
+
+
+

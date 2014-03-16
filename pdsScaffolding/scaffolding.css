@@ -1,0 +1,33 @@
+
+#options{
+	position:absolute;
+	top:20px;
+	left:10px;
+	width:290px;
+}
+
+
+#adminpanel{
+	position:absolute;
+	top:20px;
+	left:320px;
+}
+
+textarea{
+	height:200px;
+	width:500px;
+}
+
+ul{
+	margin:0px;
+	margin-bottom:40px;
+}
+
+h7 {
+	display:block;
+	font-weight:bold; 
+	padding:4px;
+	background-color:#eee;	
+	margin:0px;
+	margin-bottom:30px;
+}

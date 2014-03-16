@@ -1,0 +1,118 @@
+<?php
+
+// 2013-11-24 - I am not happy with code that is randomly placed in templates. 
+
+if(isset($_POST['add'])){
+	$sql = "
+		INSERT INTO fb_course (
+			fb_course_name,
+			is_default,
+			default_order
+		) VALUES (
+			'".addslashes($_POST['name'])."',
+			1,
+			(
+				SELECT IF(
+					MAX(c.default_order) IS NULL, 
+					1, 
+					MAX(c.default_order)+1
+				) 
+				FROM fb_course c 
+				WHERE c.is_default=1
+			)
+		)";
+	$controller->command("makeQuery", $sql, "admin_default_courses.htm"); 
+}
+
+if(isset($_POST['remove'])){
+	$sql = "
+		UPDATE fb_course 
+		SET is_default=0, default_order=0
+		WHERE fb_course_id=".addslashes($_POST['course_id']);
+	$controller->command("makeQuery", $sql, "admin_default_courses.htm"); 
+}
+
+if(isset($_POST['save'])){
+	for($i = 0; $i < count($_POST['course_id']); $i++){
+		$sql = "
+			UPDATE fb_course 
+			SET default_order=".addslashes($_POST['order'][$i])."
+			WHERE fb_course_id=".addslashes($_POST['course_id'][$i]);
+	$controller->command("makeQuery", $sql, "admin_default_courses.htm"); 
+	}
+}
+
+$sql = "SELECT * FROM fb_course WHERE is_default=1 ORDER BY default_order, fb_course_id ASC";
+$result = $controller->command("makeQuery", $sql, "admin_default_courses.htm"); 
+$courses = array();
+
+while($row = mysql_fetch_object($result)) {
+	$courses[] = $row;
+}
+
+?>
+
+<div class="container">
+	<div class="row">
+		<div class="span6">
+			<?php if(count($courses) != 0){ ?>
+			<h4>Default Courses</h4>
+			<form action="default_courses.php" method="post">
+				<table class="table">
+					<tr>
+						<th width="50%">Course Name</th>
+						<th width="25%">Order</th>
+						<th width="25%"></th>
+					</tr>
+				<?php foreach($courses as $course){ ?>
+					<tr>
+						<td><?php echo $course->fb_course_name; ?></td>
+						<td>
+							<input type="text" class="input-mini" value="<?php echo $course->default_order; ?>" name="order[]">
+							<input type="hidden" value="<?php echo $course->fb_course_id; ?>" name="course_id[]">
+						</td>
+						<td>
+							<div class="text-right">
+							<a href="#" class="btn btn-danger remove" data-id="<?php echo $chef->fb_chef_id; ?>">Remove</a>
+							</div>
+						</td>
+					</tr>
+				<?php } ?>
+					<tr>
+						<td></td>
+						<td>
+							<?php
+							//Little hack to make sure "save" gets sent through, since other buttons
+							//are in the form
+							?>
+							<input type="hidden" name="save" value="true">
+							<input type="submit" name="submit" class="btn" value="Reorder">
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+			<?php } ?>
+
+			<h4>Add a Default Course</h4>
+			<form action="default_courses.php" method="post" class="form-inline">
+				<input type="text" name="name" palceholder="Course Name..." value="">
+				<input type="submit" name="add" class="btn" value="Add">
+			</form>
+		</div>
+	</div>
+</div>
+
+<form action="default_courses.php" id="remove-form" method="post" class="hide">
+	<input type="hidden" class="remove-id" name="course_id" value="">
+	<input type="hidden" name="remove" value="true">
+</form>
+
+<script>
+$(".remove").click(function(e){
+	console.log("here");
+	e.preventDefault();
+	$(".remove-id").val($(this).data('id'));
+	$("#remove-form").submit();
+});
+</script>

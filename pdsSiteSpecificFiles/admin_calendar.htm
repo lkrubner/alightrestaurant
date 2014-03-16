@@ -1,0 +1,400 @@
+<?php
+   $loggedInId = $controller->command("getUserIdFromUserLoggedInTable");	
+if (!$loggedInId) {
+$controller->command("renderPartial", "login.htm"); 
+} else {
+
+$allOccurrences = $controller->command("fetchDatabaseTable", "lk_occurrences", array('id', 'name', 'start_day', 'start', 'end', 'type'));
+
+$monthToShow = $controller->getVar("monthToShow");
+if (!$monthToShow) $monthToShow = date ('Y-m'); 
+$theStartOfTheMonthWeWillShowAsSeconds = strtotime($monthToShow); 
+$lastMonthAsString = date ('Y-m', $theStartOfTheMonthWeWillShowAsSeconds - 1); 
+$nextMonthAsString = date ('Y-m', $theStartOfTheMonthWeWillShowAsSeconds + 2678400); 
+$theStartOfTodayInSeconds = strtotime(date ('Y-m-d'));
+
+$days = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+
+$dayOfWeekThatTheMonthStarts = date ('l', $theStartOfTheMonthWeWillShowAsSeconds); 
+
+$howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday = array_search($dayOfWeekThatTheMonthStarts, $days); 
+?>
+
+
+
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+
+
+      <table id="admin_calendar_legend">
+	<tr>
+	  <td class="member_dinner"><div class="title">Member Dinner</div></td>
+	  <td class="special_event"><div class="title">Special Event</div></td>
+	  <td class="event_client_walk_through"><div class="title" style="color:#fff;">Event client walk through</div></td>
+	  <td class="staff_interview"><div class="title">Staff interview</div></td>
+	</tr>
+      </table>
+
+
+
+
+
+
+
+
+
+
+      <h4 style="text-align:center;">
+	<a href="/admin.php?page=admin_calendar&monthToShow=<?php echo $lastMonthAsString ?>">&laquo;</a>
+	<?php echo $controller->command("formatCalendarDates",'F Y', $theStartOfTheMonthWeWillShowAsSeconds); ?>
+	<a href="/admin.php?page=admin_calendar&monthToShow=<?php echo $nextMonthAsString ?>">&raquo;</a>
+      </h4>
+
+
+
+
+
+
+
+
+
+      <table class="table table-bordered table-condensed calendar">
+
+	<tr>
+	  <th>Sunday</th>
+	  <th>Monday</th>
+	  <th>Tuesday</th>
+	  <th>Wednesday</th>
+	  <th>Thursday</th>
+	  <th>Friday</th>
+	  <th>Saturday</th>
+	</tr>
+
+
+	<?php for ($possibleDays=0; $possibleDays < 42; $possibleDays++): ?>
+
+	      <?php
+		 if ($possibleDays >= $howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday): 
+	           $howManySecondsSinceTheStartOfTheMonth = 86400 * ($possibleDays - $howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday);
+	           $theStartOfThisParticularDayInSeconds = $theStartOfTheMonthWeWillShowAsSeconds + $howManySecondsSinceTheStartOfTheMonth; 
+	         endif 
+	      ?>
+
+	<?php if($possibleDays%7 == 0): ?>
+	   <tr>
+	<?php endif ?>
+
+
+
+
+
+	  <?php if($theStartOfThisParticularDayInSeconds < $theStartOfTodayInSeconds): ?>
+	    <td style="background-color:#eee;padding-bottom:4px;" data-date="<?php echo $controller->command("formatCalendarDates",'Y-m-d', $theStartOfThisParticularDayInSeconds); ?>">
+	  <?php else: ?>
+	    <td data-date="<?php echo $controller->command("formatCalendarDates",'Y-m-d', $theStartOfThisParticularDayInSeconds); ?>">
+	  <?php endif ?>
+
+
+	    
+	    <?php if($controller->command("formatCalendarDates",'Y-m', $theStartOfThisParticularDayInSeconds)==$monthToShow): ?>
+
+
+
+	    <div class="text-right"><?php echo $controller->command("formatCalendarDates",'j', $theStartOfThisParticularDayInSeconds); ?></div>
+
+
+
+
+	    <?php foreach($allOccurrences as $o): ?>
+	    <?php if ($controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds) == $o['start_day']): ?>
+
+	    <?php $startingTimeAsString = "{$o['start_day']} {$o['start']}"; ?>
+	    <?php $startingTimeAsSeconds = strtotime($startingTimeAsString); ?>
+	    <?php $startingHour = date('g A', $startingTimeAsSeconds); ?>
+
+	    <?php $endingTimeAsString = "{$o['start_day']} {$o['end']}"; ?>
+	    <?php $endingTimeAsSeconds = strtotime($endingTimeAsString); ?>
+	    <?php $endingHour = date('g A', $endingTimeAsSeconds); ?>
+
+	    <a href="admin.php?page=admin_edit_occurrence.htm&type=<?php echo $o['type']; ?>&editId=<?php echo $o['id']; ?>" data-event-id="<?php echo $o['id']; ?>" class="event <?php echo $o['type'];; ?>">
+	      <div class="time"><?php echo $startingHour." - ".$endingHour; ?></div>
+	      <div class="title"><?php echo $o['name']; ?></div>
+	    </a>
+	    <?php endif ?>
+	    <?php endforeach ?>
+
+
+
+
+
+
+	  <?php if($theStartOfThisParticularDayInSeconds >= $theStartOfTodayInSeconds): ?>
+	    <div class="add-event">
+	      &plus; Add Event
+	      <ul class="event-options unstyled">
+		<li><a href="/admin.php?page=admin_edit_occurrence&type=member_dinner&setStartDay=<?php echo $controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds); ?>">Member Dinner</a></li>
+		<li><a href="/admin.php?page=admin_edit_occurrence&type=special_event&setStartDay=<?php echo $controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds); ?>">Special Event</a></li>
+		<li><a href="/admin.php?page=admin_edit_occurrence&type=event_client_walk_through&setStartDay=<?php echo $controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds); ?>">Event Client Walk Through</a></li>
+		<li><a href="/admin.php?page=admin_edit_occurrence&type=staff_interview&setStartDay=<?php echo $controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds); ?>">Staff Interview</a></li>
+	      </ul>
+	    </div>
+	  <?php endif ?>
+
+
+	  <?php endif ?>
+	  </td>
+
+
+	  <?php if($possibleDays%7 == 6){ ?>
+	   </tr>
+	  <?php } ?>
+
+	<?php endfor ?>
+      </table>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+
+
+
+
+<?php
+$monthToShow = $nextMonthAsString;
+
+$theStartOfTheMonthWeWillShowAsSeconds = strtotime($monthToShow); 
+$lastMonthAsString = date ('Y-m', $theStartOfTheMonthWeWillShowAsSeconds - 1); 
+$nextMonthAsString = date ('Y-m', $theStartOfTheMonthWeWillShowAsSeconds + 2678400); 
+$theStartOfTodayInSeconds = strtotime(date ('Y-m-d'));
+
+$days = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+
+$dayOfWeekThatTheMonthStarts = date ('l', $theStartOfTheMonthWeWillShowAsSeconds); 
+
+$howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday = array_search($dayOfWeekThatTheMonthStarts, $days); 
+
+$theStartOfThisParticularDayInSeconds = 0;
+
+?>
+
+
+
+<?php $controller->command("showUserMessages"); ?>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+
+
+
+
+      <h4 style="text-align:center;">
+	<a href="/admin.php?page=admin_calendar&monthToShow=<?php echo $lastMonthAsString ?>">&laquo;</a>
+	<?php echo $controller->command("formatCalendarDates",'F Y', $theStartOfTheMonthWeWillShowAsSeconds); ?>
+	<a href="/admin.php?page=admin_calendar&monthToShow=<?php echo $nextMonthAsString ?>">&raquo;</a>
+      </h4>
+
+
+
+
+
+
+
+
+
+      <table class="table table-bordered table-condensed calendar">
+
+	<tr>
+	  <th>Sunday</th>
+	  <th>Monday</th>
+	  <th>Tuesday</th>
+	  <th>Wednesday</th>
+	  <th>Thursday</th>
+	  <th>Friday</th>
+	  <th>Saturday</th>
+	</tr>
+
+
+	<?php for ($possibleDays=0; $possibleDays < 42; $possibleDays++): ?>
+
+	      <?php
+
+
+
+		 if ($possibleDays >= $howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday): 
+	           $howManySecondsSinceTheStartOfTheMonth = 86400 * ($possibleDays - $howManyDaysToSkipAtTheStartOfTheCalendarBecauseTheFirstDayOfTheMonthIsNotAlwaysASunday);
+	           $theStartOfThisParticularDayInSeconds = $theStartOfTheMonthWeWillShowAsSeconds + $howManySecondsSinceTheStartOfTheMonth; 
+	         endif 
+	      ?>
+
+	<?php if($possibleDays%7 == 0): ?>
+	   <tr>
+	<?php endif ?>
+
+
+
+
+
+	  <?php if($theStartOfThisParticularDayInSeconds < $theStartOfTodayInSeconds): ?>
+	    <td style="background-color:#eee;padding-bottom:4px;" data-date="<?php echo $controller->command("formatCalendarDates",'Y-m-d', $theStartOfThisParticularDayInSeconds); ?>">
+	  <?php else: ?>
+	    <td data-date="<?php echo $controller->command("formatCalendarDates",'Y-m-d', $theStartOfThisParticularDayInSeconds); ?>">
+	  <?php endif ?>
+
+
+	    
+	    <?php if($controller->command("formatCalendarDates",'Y-m', $theStartOfThisParticularDayInSeconds)==$monthToShow): ?>
+
+
+
+	    <div class="text-right"><?php echo $controller->command("formatCalendarDates",'j', $theStartOfThisParticularDayInSeconds); ?></div>
+
+
+
+
+	    <?php foreach($allOccurrences as $o): ?>
+	    <?php if ($controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds) == $o['start_day']): ?>
+
+	    <?php $startingTimeAsString = "{$o['start_day']} {$o['start']}"; ?>
+	    <?php $startingTimeAsSeconds = strtotime($startingTimeAsString); ?>
+	    <?php $startingHour = date('g A', $startingTimeAsSeconds); ?>
+
+	    <?php $endingTimeAsString = "{$o['start_day']} {$o['end']}"; ?>
+	    <?php $endingTimeAsSeconds = strtotime($endingTimeAsString); ?>
+	    <?php $endingHour = date('g A', $endingTimeAsSeconds); ?>
+
+	    <a href="admin.php?page=admin_edit_occurrence.htm&type=<?php echo $o['type']; ?>&editId=<?php echo $o['id']; ?>" data-event-id="<?php echo $o['id']; ?>" class="event <?php echo $o['type'];; ?>">
+	      <div class="time"><?php echo $startingHour." - ".$endingHour; ?></div>
+	      <div class="title"><?php echo $o['name']; ?></div>
+	    </a>
+	    <?php endif ?>
+	    <?php endforeach ?>
+
+
+
+
+
+
+	  <?php if($theStartOfThisParticularDayInSeconds >= $theStartOfTodayInSeconds): ?>
+	    <div class="add-event">
+	      &plus; Add Event
+	      <ul class="event-options unstyled">
+		<li><a href="/admin.php?page=admin_edit_occurrence&type=member_dinner&setStartDay=<?php echo $controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds); ?>">Member Dinner</a></li>
+		<li><a href="/admin.php?page=admin_edit_occurrence&type=special_event&setStartDay=<?php echo $controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds); ?>">Special Event</a></li>
+		<li><a href="/admin.php?page=admin_edit_occurrence&type=event_client_walk_through&setStartDay=<?php echo $controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds); ?>">Event Client Walk Through</a></li>
+		<li><a href="/admin.php?page=admin_edit_occurrence&type=staff_interview&setStartDay=<?php echo $controller->command("formatCalendarDayDate",$theStartOfThisParticularDayInSeconds); ?>">Staff Interview</a></li>
+	      </ul>
+	    </div>
+	  <?php endif ?>
+
+
+	  <?php endif ?>
+	  </td>
+
+
+	  <?php if($possibleDays%7 == 6){ ?>
+	   </tr>
+	  <?php } ?>
+
+	<?php endfor ?>
+      </table>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php } // closes if(!$loggedInId)   ?>
+
+

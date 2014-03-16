@@ -1,0 +1,76 @@
+<?php
+
+$loggedInId = $controller->command("getUserIdFromUserLoggedInTable");	
+$rowsWithWinesIdsBelongingToThisMember = $controller->command("databaseFetchSqlWithTrust", "select wine_id from lk_member_wines where user_id = $loggedInId and has_this_member_already_consumed_this_bottle_of_wine = 1", "private_my_cellar");
+
+$howManyWinesDoesTheMemberHave = count($rowsWithWinesIdsBelongingToThisMember);
+?>
+
+
+
+
+
+
+<h3>WINE CELLAR</h3><p>
+  <br>
+  Below is a list of personal cellar selections you've consumed at the club.
+</p>
+
+
+<div class="cellar">
+
+<article>
+
+
+  <div id="bc_container">
+    <ul id="res_bc_wcellar">
+      <li class="first">
+	<a href="/private.php?page=private_wine_list_for_public">BROWSE CELLAR SELECTIONS</a>
+      </li><li>
+	<a href="/private.php?page=private_my_cellar">MY CELLAR CONTENTS</a>
+      </li><li>
+	<a href="/private.php?page=private_my_cellar_previously_consumed" class="selected">CONSUMED SELECTIONS</a>
+      </li>
+    </ul>
+  </div>
+
+
+
+
+
+
+    <?php
+       for ($i=0; $i < $howManyWinesDoesTheMemberHave; $i++):
+   		       $r = $rowsWithWinesIdsBelongingToThisMember[$i];
+		       $query = "select * from lk_wines where id = {$r['wine_id']} order by varietal, id"; 
+		       $wines = $controller->command("databaseFetchSqlWithTrust", $query, "private_my_cellar");
+                       $w = $wines[0];
+					 ?> 
+
+
+
+
+		       <div class="hr"></div>
+
+		       <h4><?php echo $w['name'] ?> <?php echo $w['vintage'] ?></h4>
+
+		       <div class="wine">
+			 <span><?php echo $w['color'] ?></span>
+			 <span><?php echo $w['varietal'] ?></span>
+			 <span><?php echo $w['region'] ?></span>
+		       </div>
+
+		       <br>
+		       <br>
+		       <br>
+		       <br>
+
+		       <?php endfor ?>
+
+
+
+
+
+</article>
+
+</div>

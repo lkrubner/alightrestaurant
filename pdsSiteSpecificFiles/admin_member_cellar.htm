@@ -1,0 +1,158 @@
+<?php
+
+
+$controller->import("Bottle", "admin_member_cellar.htm"); 
+
+if(isset($_GET['filter'])){
+	$first_name = $_GET['first_name'];
+	$last_name = $_GET['last_name'];
+	if(isset($_GET['status'])) {
+          $status_filters = $_GET['status'];
+        }
+} else {
+	$first_name = "";
+	$last_name = "";
+	$status_filters = array(1, 2, 3, 4, 5);
+}
+
+if(isset($_POST['id'])){
+	Bottle::updateStatus($_POST['id'], $_POST['status'], $User);
+
+	$bottle = Bottle::getUserInfo($_POST['id']);
+
+	if($_POST['change_inventory'] == 1){
+		Bottle::minusInventory($bottle->wine_id, 1);
+	}
+
+	redirect($_POST['redir']);
+}
+
+$bottles = Bottle::getMemberBottles($first_name, $last_name, $status_filters);
+$statuses = Bottle::getStatuses();
+
+$subMenu = "cellar";
+
+?>
+
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<h4>Member Bottles</h4>
+			<form action="member_cellar.php" method="get">
+
+				<label>Member Name</label>
+				<input type="text" name="first_name" value="<?php echo $first_name; ?>" class="input-medium" placeholder="First Name...">
+				<input type="text" name="last_name" value="<?php echo $last_name; ?>" class="input-medium" placeholder="Last Name...">
+
+				<label>Status</label>
+				<div class="form-inline">
+				<?php foreach($statuses as $id=>$val){ ?>
+					<?php
+					$checked = '';
+					if(in_array($id, $status_filters)){
+						$checked = " checked='checked'";
+					}
+					?>
+					<label class="checkbox" style="padding-right:15px;">
+					<input type="checkbox"<?php echo $checked; ?> name="status[]" value='<?php echo $id; ?>'><?php echo $val; ?>
+					</label>
+				<?php } ?>
+				</div>
+
+				<div style="margin-top:10px;">
+					<input type="submit" class="btn" value="Filter" name="filter">
+				</div>
+
+			</form>
+			<table class="table" style="margin-bottom:0;">
+				<tr>
+					<th width="23%">Name</th>
+					<th width="25%">Bottle Name</th>
+					<th width="11%">Year</th>
+					<th width="11%">Price Paid</th>
+					<th width="20%">Status</th>
+					<th width="10%"></th>
+				</tr>
+			</table>
+
+			<?php foreach($bottles as $b){ ?>
+			<form action="member_cellar.php" method="post" style="margin-bottom:0;">
+			<table class="table" style="margin-bottom:0;">
+				<tr>
+					<td width="23%"><?php echo $b->first_name." ".$b->last_name; ?></td>
+					<td width="25%"><?php echo $b->wine_name; ?></td>
+					<td width="11%"><?php echo $b->bottle_year; ?></td>
+					<td width="11%">$<?php echo $b->price; ?></td>
+					<td width="20%">
+						<select style="width:165px; margin-bottom:0;" name="status">
+						<?php echo $controller->command("getOptions", Bottle::getStatuses(), $b->status); ?>
+						</select><br>
+						<small>
+							<a href="cellar_history.php?id=<?php echo $b->user_wine_id; ?>">See History</a>
+							<?php if($b->status == CELLAR_ORDERED || $b->status == CELLAR_PENDING) { ?>
+							&nbsp;&nbsp;
+							<em>Inventory = <?php echo $b->inventory; ?></em>
+							<?php } ?>
+						</small>
+					</td>
+					<td width="10%">
+						<input type="hidden" name="id" value="<?php echo $b->user_wine_id; ?>">
+						<input type="hidden" name="redir" value="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>">
+						<input type="hidden" class="change-inventory" name="change_inventory" value="0">
+						<input type="submit" class="btn change-status" data-current="<?php echo $b->status; ?>" data-inventory="<?php echo $b->inventory; ?>" name="save" value="Save">
+					</td>
+				</tr>
+			</table>
+			</form>
+			<?php } ?>
+
+		</div>
+	</div>
+</div>
+
+
+<div id="inventoryModal" class="modal hide" tabindex="-1">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+		<h3>Add Member Dinner</h3>
+	</div>
+	<div class="modal-body">
+		<p>
+			There are currently <span class="inventory-ct" style="font-weight:bold;"></span> bottles in inventory.
+		</p>
+		<p>
+			  <strong>Should we decrease the inventory by one?</strong>
+		</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn inventory-no">No</button>
+		<button class="btn btn-primary inventory-yes">Yes</button>
+	</div>
+</div>
+
+<script>
+$(function(){
+	$(".change-status").click(function(e){
+		
+		if($(this).data('inventory')!=0 && (
+			$(this).data('current')==<?php echo CELLAR_ORDERED; ?> || 
+			$(this).data('current')==<?php echo CELLAR_PENDING; ?>)){
+			e.preventDefault();
+			var inventoryCt = $(this).data('inventory');
+			var $form = $(this).closest("form");
+			$("#inventoryModal .inventory-ct").text(inventoryCt);
+			
+			$("#inventoryModal .inventory-yes").click(function(){
+				$form.find(".change-inventory").val("1");
+				$form.submit();
+			});
+			$("#inventoryModal .inventory-no").click(function(){
+				$form.submit();
+			});
+			$("#inventoryModal").modal("show");
+		}
+	});
+});
+</script>
+
+

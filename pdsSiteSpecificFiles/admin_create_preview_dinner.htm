@@ -1,0 +1,67 @@
+
+
+
+<div id="create_preview_dinner" class="container">
+	<form action="/admin.php?page=edit_dinner" method="post">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+			<h3>Add Member Dinner</h3>
+		</div>
+		<div class="modal-body form-horizontal">
+			<div class="control-group">
+				<label class="control-label">Date</label>
+				<div class="controls">
+					<input type="text" id="dinner_date_readable" name="date_readable" disabled="disabled">
+					<input type="hidden" name="date" id="dinner_date">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="dinner_start">First Seating</label>
+				<div class="controls">
+					<select id="dinner_start" name="start_minute" class="auto-width"><?php echo $controller->command("getTimeOptions", "7:00"); ?></select>
+					<select name="start_merediem" class="auto-width">
+						<?php echo $controller->command("getMerediemOptions", "PM"); ?>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="dinner_end">Last Seating</label>
+				<div class="controls">
+					<select id="dinner_end" name="end_minute" class="auto-width"><?php echo $controller->command("getTimeOptions", "9:30"); ?></select>
+					<select name="end_merediem" class="auto-width">
+						<?php echo $controller->command("getMerediemOptions", "PM"); ?>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="dinner_end">Max Guests</label>
+				<div class="controls">
+					<table class="table table-condensed" style="margin-bottom:0;">
+						<tr>
+							<th><small>Total</small></th>
+							<th><small>Per Hour</small></th>
+							<th><small>Per Half Hour</small></th>
+						</tr>
+						<tr>
+							<td><input type="text" name="max_total" class="input-mini" value="0" /></td>
+							<td><input type="text" name="max_hour" class="input-mini" value="0" /></td>
+							<td><input type="text" name="max_halfhour" class="input-mini" value="0" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="dinner_meal">Meal</label>
+				<div class="controls">
+					<select id="dinner_meal" name="meal">
+						<option value="new">New Meal</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<input type="submit" name="add" value="Continue" id="dinner_submit" class="btn btn-primary">
+		</div>
+	</form>
+</div>

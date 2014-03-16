@@ -1,0 +1,41 @@
+<?php 
+
+   $controller->import("currentEditingId", "admin_edit_user.htm"); 
+$controller->import("currentValueForTotalFormInputs", "admin_edit_user.htm"); 
+
+$controller->command("setTotalFormInputsForPage", "users", currentEditingId('users'));  
+$controller->command("setTotalFormInputsOwnersForTheseRecords"); 
+
+$userId = currentEditingId('users'); 
+$user = $controller->command("rowGetWithTrust", "users", $userId); 
+
+?>
+
+
+
+
+
+
+<div class="container">
+
+
+  <form id="users_form" action="/admin.php?page=admin_edit_user&editId=<?php echo currentEditingId('users'); ?>" method="post">
+
+    <p>Is <?php echo $user["first_name"]; ?> <?php echo $user["last_name"]; ?> arrving at the club?</p>
+
+    <div class="control-group">
+      <label class="control-label" for="totalFormInputs[lk_users_visit_the_club_history][0][notes]">Notes </label>
+      <div class="controls">
+	<input type="notes" id="totalFormInputs[lk_users_visit_the_club_history][0][notes]" name="totalFormInputs[lk_users_visit_the_club_history][0][notes]" value="<?php echo currentValueForTotalFormInputs("users", currentEditingId('users'), "notes"); ?>" />
+      </div>
+    </div>
+    
+    <input name="save" class="btn btn-primary" id="save_occurrence" value="Click to record their arrival" type="submit">
+    <input type="hidden" name="choiceMade[]" value="createRecordsForMultipleDatabaseTables" />
+    <input type="hidden" name="totalFormInputs[lk_users_visit_the_club_history][0][user_id]" value="<?php echo $userId; ?>">
+    <input type="hidden" name="totalFormInputs[lk_users_visit_the_club_history][0][when_did_they_arrive]" value="<?php echo date('Y-m-d H:i:s'); ?>">
+  </form>
+
+
+
+

@@ -1,0 +1,34 @@
+<?php
+$formInputs = $controller->getVar("formInputs"); 
+$arrayOf2Numbers =  $controller->command("createCaptcha"); 
+$firstNumber = $arrayOf2Numbers[0];
+$secondNumber = $arrayOf2Numbers[1];
+?>
+
+
+
+
+<form id="register_form" action="/index.php?page=register" method="post">
+
+  <h3>Please create an account:</h3>
+
+  <input type="hidden" name="choiceMade[]" value="userCreateAccountParlor" />
+  <input type="hidden" name="hidden_form_input_that_if_used_indicates_the_user_is_a_spam_robot" value="" />
+  
+  <span style="font-size: 18px; color: #fff; padding:4px;"><?php $controller->command("showUserMessages"); ?></span>
+
+  <p>First Name: <input type="text" name="formInputs[first_name]" size="40" maxlength="20" value="<?php echo $formInputs['first_name']; ?>" /></p>
+
+  <p>Last Name: <input type="text" name="formInputs[last_name]" size="40" maxlength="80" value="<?php echo $formInputs['last_name'] ?>" /></p>
+
+  <p>Email: <input type="text" CLASS=myinputstyle name="formInputs[email]" size="40" maxlength="80" value="<?php echo $formInputs['email'] ?>" /></p>
+
+  <p>Password: <input type="password" CLASS=myinputstyle name="formInputs[password]" size="40" maxlength="80" value="<?php echo $formInputs['password'] ?>" /></p>
+
+  <p>Confirm Password: <input type="password" name="password2" /></p>
+
+  <p>Please add these numbers together: <?php echo $firstNumber; ?> + <?php echo $secondNumber; ?> <input type="text" CLASS="myinputstyle" name="captcha" /></p>
+
+  <a href="#" class="button-custom form-submit" style="margin: 8px; clear:both;"  onclick="document.getElementById('register_form').submit(); return false;"><span>Register</span></a>
+
+</form>

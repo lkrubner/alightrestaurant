@@ -1,0 +1,258 @@
+<?php
+
+
+if(isset($_GET['id'])){
+  $dinner = $controller->command("loadMemberDinner", $_GET['id']);
+  if ($dinner) { 
+    $header = "Manage Member Dinner";
+    $all_reservations = $dinner->getAllReservations();
+    $date = $dinner->night->format(P_SQL_DATE);
+
+    $max_total = $dinner->max_guests['total'];
+    $max_hour = $dinner->max_guests['hour'];
+    $max_halfhour = $dinner->max_guests['halfhour'];
+
+    list($start_minute, $start_merediem) = $controller->command("getTimeParts", $dinner->start);
+    list($end_minute, $end_merediem) = $controller->command("getTimeParts", $dinner->end);
+    $meal_data = $dinner->meal->getJSON();
+    $wine_data = json_encode($dinner->getWineData());
+  } else {
+    $controller->addToResults("Error: we can find no member dinner with the id of {$_GET['id']}."); 
+  }
+}
+
+$chefs = $controller->command("getDefaultChef");
+
+?>
+
+
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<form action="/admin.php?page=edit_dinner&<?php if(isset($_GET['id'])){ echo "id=".$_GET['id']; } ?>" method="post">
+			  <input type="hidden" name="choiceMade[]" value="saveDinnerInfo">
+			<fieldset>
+				<legend><?php echo $header; ?></legend>
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="dinner_date">Date</label>
+						<div class="controls">
+							<input type="hidden" name="date" value="<?php echo $date; ?>">
+							<input type="text" name="date_readable" disabled="disabled" value="<?php echo $date; ?>">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="dinner_end">Max Guests</label>
+						<div class="controls">
+							<table class="table table-condensed" style="margin-bottom:0;">
+								<tr>
+									<th><small>Total</small></th>
+									<th><small>Per Hour</small></th>
+									<th><small>Per Half Hour</small></th>
+								</tr>
+								<tr>
+									<td><input type="text" name="max_total" class="input-mini" value="<?php echo $max_total; ?>" /></td>
+									<td><input type="text" name="max_hour" class="input-mini" value="<?php echo $max_hour; ?>" /></td>
+									<td><input type="text" name="max_halfhour" class="input-mini" value="<?php echo $max_halfhour; ?>" /></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="dinner_start">First Seating</label>
+						<div class="controls">
+							<select id="dinner_start" name="start_minute" class="auto-width">
+								<?php echo $controller->command('getTimeOptions', $start_minute); ?>
+							</select>
+							<select name="start_merediem" class="auto-width">
+								<?php echo $controller->command('getMerediemOptions', $start_merediem); ?>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="dinner_end">Last Seating</label>
+						<div class="controls">
+							<select id="dinner_end" name="end_minute" class="auto-width">
+								<?php echo $controller->command('getTimeOptions', $end_minute); ?>
+							</select>
+							<select name="end_merediem" class="auto-width">
+								<?php echo $controller->command('getMerediemOptions', $end_merediem); ?>
+							</select>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<?php if(isset($_GET['id'])){ ?>
+			<fieldset>
+				<legend>Reservations</legend>
+				<div class="row">
+					<?php foreach($all_reservations as $time=>$reservations){ ?>
+
+					<div class="span3">
+						<div class="well well-small small">
+							<p style="margin-bottom:0;" class="text-right"><?php echo $controller->command('getPrintTime', $time); ?></p>
+							<p>
+							<?php 
+							foreach($reservations as $r){
+								echo "<strong>".$r->first_name." ".$r->last_name."</strong>";
+								if(count($r->guests)!=0){
+									echo "<br><strong>G: </strong>";
+									foreach($r->guests as $i=>$guest){
+										echo $guest->name;
+										if($i!=count($r->guests)-1){
+											echo ", ";
+										}
+									}
+								}
+								if(count($r->wines)!=0){
+									echo "<br><strong>W: </strong>";
+									foreach($r->wines as $i=>$wine){
+										echo $wine->wine_name;
+										if($i!=count($r->wines)-1){
+											echo ", ";
+										}
+									}
+								}
+							} ?>
+							</p>
+						</div>
+					</div>
+					<?php } ?>
+				</div>
+			</fieldset>
+			<?php } ?>
+
+			<fieldset>
+				<legend>Meal Information</legend>
+				<div class="courses"></div>
+			</fieldset>
+
+			<fieldset>
+				<legend>Suggested Wine</legend>
+				<?php $controller->command("renderPartial", "dinner_wine"); ?>
+
+			</fieldset>
+
+			<hr class="legend">
+			<?php if(isset($_POST['add'])){ ?>
+			<input type="hidden" name="add" value="true">
+			<?php } ?>
+			<input type="hidden" id="meal_data" name="meal_data" value="">
+			<input type="hidden" id="old_meal_data" name="old_meal_data" value="">
+			<input type="hidden" id="wine_data" name="wine_data" value="">
+			<input type="hidden" id="old_wine_data" name="old_wine_data" value="">
+			<input type="submit" name="save" class="btn btn-primary" id="save_dinner" value="Save">
+			<a href="calendar.php" class="btn">Cancel</a>
+
+			</form>
+
+
+
+<?php if(isset($_GET['id'])){ ?>
+  <form class="delete-form-one-button" id="delete-form" action="/admin.php?page=edit_dinner&id=<?php echo $_GET['id']; ?>" method="post">
+    <input type="hidden" name="choiceMade[]"  value="deleteDinner">
+    <input class="btn btn-danger pull-right" id="delete-btn" type="submit" value="Delete Dinner">
+  </form>
+<?php } ?>
+
+		</div>
+	</div>
+</div>
+
+
+
+<div id="course-template" class="hide">
+	<div class="well well-small course-info" style="background-color:#fff; border-color: #000;">
+		<p>
+			<strong>Course <span class="course-number"></span></strong>
+			<span class="pull-right">
+				<a href="#" class="course-move-up"><i class="icon-chevron-up"></i></a>
+				<a href="#" class="course-move-down"><i class="icon-chevron-down"></i></a>
+				&nbsp;
+				<a href="#" class="course-remove"><i class="icon-remove"></i></a>
+			</span>
+		</p>
+		<label>Title</label>
+		<input type="text" class="course-title" value="">
+	</div>
+	<div class="row-fluid">
+		<div class="span10 offset1 course-options">
+			<div class="well well-small">
+				<a href="#" class="add-option">&plus; Add New Option</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="option-template" class="hide">
+	<div class="well well-small option-info">
+		<p>
+			<strong>Option <span class="option-number"></span></strong>
+			<span class="pull-right">
+				<a href="#" class="option-move-up"><i class="icon-chevron-up"></i></a>
+				<a href="#" class="option-move-down"><i class="icon-chevron-down"></i></a>
+				&nbsp;
+				<a href="#" class="option-remove"><i class="icon-remove"></i></a>
+			</span>
+		</p>
+		<table width="100%">
+			<tr>
+				<td width="50%">
+		<label>Name</label>
+		<input type="text" class="option-name" value="">
+				</td>
+				<td width="50%">
+		<label>Chef</label>
+		<select class="option-chef input-medium">
+			<option value="">Choose Chef</option>
+			<?php foreach($chefs as $chef){ ?>
+			<option value="<?php echo $chef->id; ?>"><?php echo $chef->name; ?></option>
+			<?php } ?>
+			<!-- <option value="custom">Custom...</option> -->
+		</select>
+		<!-- <input type="text" class="input-medium" name="custom_chef" placeholder="Enter chef name..."> -->
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+		<label>Description</label>
+		<textarea class="input-block-level option-description" rows=3></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div id="add-course-template" class="add-course-container well well-small hide" style="background-color:#fff; border-color: #000;">
+	<a href="#" class="add-course">&plus; Add a New Course</a>
+</div>
+
+<script src="/pdsJs/edit_dinner.js"></script>
+
+<script>
+var wine_data = <?php echo $wine_data; ?>;
+function setWineData(data){
+	wine_data = data;
+	$("#wine_data").val(utf8_json(data));
+}
+function setOldWineData(data){
+	$("#old_wine_data").val(utf8_json(data));
+}
+
+var meal_data = <?php echo $meal_data; ?>;
+EditMeal.init(".courses", meal_data);
+
+
+$("#old_meal_data").val(utf8_json(EditMeal.getMealData(".courses")));
+
+$("#save_dinner").click(function(e){
+	$("#meal_data").val(utf8_json(EditMeal.getMealData(".courses")));
+});
+$("#delete-btn").click(function(e){
+	e.preventDefault();
+	$("#delete-form").submit();
+});
+</script>

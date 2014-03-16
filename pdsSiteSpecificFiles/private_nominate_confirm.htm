@@ -1,0 +1,33 @@
+<?php
+$totalFormInputs = $controller->getVar("totalFormInputs"); 
+$u = $totalFormInputs["users"][0];
+
+?>
+
+
+
+<article>
+
+
+  <div class="std_content">
+    <h3>Confirmation</h3>
+    <div class="hr"></div>
+
+
+	  <div class="container">
+	    <br>
+	    <?php echo $controller->command("showUserMessages"); ?>  
+	    <br>
+	  </div>
+
+
+
+    <h4 style=font-family:quicksand;>Nomination Received</h4>
+    <p class="help">Thank you for nominating <?php echo $u["first_name"]; ?> <?php echo $u["last_name"]; ?>  <?php echo $u["email"]; ?> .</p>
+
+    <a href="/private.php?page=private_nominate" data-hover="Nominate Another" class="button-custom"><span>Nominate Another</span></a>
+    <a href="/private.php?page=private_my_nomination_history" data-hover="Nomination History" class="button-custom"><span>Nomination History</span></a>
+
+  </div>
+
+</article>

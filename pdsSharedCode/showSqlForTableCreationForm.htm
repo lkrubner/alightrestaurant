@@ -1,0 +1,19 @@
+
+<form method="post" action="index.php">
+
+<h4>Here is the SQL we will use to create this table:</h4>
+
+<p>This is the SQL we will use to create this table: <br />
+<textarea name="stringOfSql"><?php currentValueForFormResults("sql"); ?></textarea>
+</p>
+
+
+<br /> <br /> <br /> 
+<p><input type="submit" value="Create Table" /></p>
+<input type="hidden" name="choiceMade[]" value="createTable" />
+<input type="hidden" name="choiceMade[]" value="generateScaffoldingFiles" />
+
+<input type="hidden" name="nameOfTable" value="<?php echo $_POST["nameOfTable"]; ?>" />
+<input type="hidden" name="addAnImageField" value="<?php echo $_POST["addAnImageField"]; ?>" />
+
+</form>

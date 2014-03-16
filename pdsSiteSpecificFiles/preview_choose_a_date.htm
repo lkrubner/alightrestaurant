@@ -1,0 +1,131 @@
+<?php
+
+if ($controller->arrayOfAllCarriedInfo["preview_details_error"] == "true"):
+
+$controller->command("renderPartial", "preview_details"); 	
+
+else:  
+
+$preview = $controller->getVar("preview"); 
+
+$userIdOfPersonMakingTheReservation = $controller->command("getUserIdFromUserLoggedInTable");	
+
+if (!$userIdOfPersonMakingTheReservation) {
+   $userIdOfPersonMakingTheReservation = current($controller->arrayOfAllCarriedInfo["arrayOfIdsOfRecordsThatWereJustCreated"]["users"]);
+}
+
+$reservationId = current($controller->arrayOfAllCarriedInfo["arrayOfIdsOfRecordsThatWereJustCreated"]["lk_reservations"]);
+if(!$reservationId) {
+  $formInputs["user_id"] = $userIdOfPersonMakingTheReservation;
+  $reservationId = $controller->command("rowCreate", "lk_reservations", $formInputs); 
+}
+
+$thisReservation = $controller->command("rowGetWithTrust", "lk_reservations", $reservationId);
+$userId = $thisReservation["user_id"];
+
+$hasThisUserFilledOutAnApplication = $controller->command("hasThisUserFilledOutAnApplication", $userId);
+
+
+if ($hasThisUserFilledOutAnApplication) {
+        $today = date('Y-m-d');
+        $query = "
+        SELECT id, name, description, start_day, start
+        FROM lk_occurrences  
+        WHERE type = 'preview_dinner' and start_day > '$today' and id not in (select lk_occurrence_id from lk_reservations)
+        ORDER BY start_day
+        ";
+        $previewDinners = $controller->command("databaseFetchSqlWithTrust", $query, "private_reservations.htm"); 
+} else {
+        $today = date('Y-m-d');
+        $query = "
+        SELECT id, name, description, start_day, start
+        FROM lk_occurrences  
+        WHERE type = 'preview_dinner' and start_day > '$today' and id not in (select lk_occurrence_id from lk_reservations)
+        ORDER BY start_day desc
+        LIMIT 3
+        ";
+
+        $previewDinners = $controller->command("databaseFetchSqlWithTrust", $query, "private_reservations.htm"); 
+}
+
+
+?>
+
+
+  <article>
+    <section>
+      
+	  <div class="container">
+	    <br>
+	    <?php echo $controller->command("showUserMessages"); ?>  
+	    <br>
+	  </div>
+
+
+      <h4>Available Evenings</h4>
+
+      <div class="hr"></div>
+
+      <?php foreach($previewDinners as $d): ?>
+
+
+      <?php $startingTimeAsString = "{$d['start_day']} {$d['start']}"; ?>
+      <?php $startingTimeAsSeconds = strtotime($startingTimeAsString); ?>
+      <?php $dateToBeShown = date('l, F j', $startingTimeAsSeconds); ?>
+      <?php $hourToBeShown = date('g A', $startingTimeAsSeconds); ?>
+      <?php $hourForUserToArrive = date('Y-m-d H:i:s', $startingTimeAsSeconds); ?>
+      <?php $idForDinnerForm = "reservation-dinner-" . $d['id']; ?>
+
+      <h4><?php echo $dateToBeShown ?></h4>
+
+      <p><?php echo $hourToBeShown ?></p>
+
+      <a href="#" data-hover="Reserve Member Dinner" class="button-custom btn_left" onclick="showTheModalForThisOccurrence('<?php echo $idForDinnerForm ?>'); return false;"><span>Reserve Preview Dinner</span></a>
+
+
+      
+      <form action="/preview.php?page=preview_finalized" method="post" class="reservation_dialog" id="<?php echo $idForDinnerForm ?>">
+
+	<input type="hidden" name="choiceMade[]" value="previewChooseADateSave" />
+
+	<input type="hidden" name="reservationId" value="<?php echo $reservationId; ?>">
+
+	<input type="hidden" name="only_stupid_bots_will_ever_fill_this_input" value="">
+
+	<input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $reservationId; ?>][user_id]" value="<?php echo $userId ?>">
+	<input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $reservationId; ?>][at_what_time_does_the_member_plan_to_arrive]" value="<?php echo $hourForUserToArrive; ?>">
+	<input type="hidden"  name="totalFormInputs[lk_reservations][<?php echo $reservationId; ?>][lk_occurrence_id]" value="<?php echo $d["id"]; ?>">
+
+	<?php $thisOccurrenceCourses = $controller->command("databaseGetCoursesForOccurrence", $d['id']); ?>
+
+	<ul>
+	  <?php foreach($thisOccurrenceCourses as $course): ?>
+	  <li style="color:#fff;"><?php echo $course['name'] ?></li>
+
+
+	  <?php $thisCoursesFoods = $controller->command("databaseGetFoodsForCourse", $course['id']);  ?>
+
+	  <?php foreach($thisCoursesFoods as $food): ?>
+  	  <li><?php echo $food['name'] ?></li>
+  	  <?php endforeach ?>
+	  <?php endforeach ?>
+	</ul>
+
+	<br>
+	<a href="#" class="button_modal" onclick="document.getElementById('<?php echo $idForDinnerForm ?>').submit(); return false;">RESERVE THIS DATE</a>
+      </form>
+
+
+
+      <br><br><br>
+
+
+      
+
+
+      <?php endforeach ?>
+
+    </section>
+  </article>
+
+<?php endif ?>

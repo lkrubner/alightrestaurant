@@ -1,0 +1,32 @@
+
+#options{
+	position:absolute;
+	top:20px;
+	left:10px;
+	width:270px;
+}
+
+
+#adminpanel{
+	position:absolute;
+	top:20px;
+	left:310px;
+}
+
+#previewList{
+	width:200px;
+	float:right; 
+	margin:0px;
+	margin-left:25px;
+	margin-bottom:25px;
+}
+
+textarea{
+	height:200px;
+	width:500px;
+}
+
+ul{
+	margin:0px;
+	margin-bottom:40px;
+}

@@ -1,0 +1,19 @@
+
+<form method="post" action="index.php">
+
+<h3>Choose which fields should be mandatory</h3>
+
+<p>If a user fails to fill in a field that you mark as mandatory, their entry won't be created and instead 
+they will be prompted to fill out the field. (Note: each time you fill out this form you must fill it out in
+full, old values are not remembered from previous visits)</p>
+
+<?php showAllTables("chooseAField.htm"); ?>
+
+<p><input type="submit" value="Make fields mandatory" /></p>
+<input type="hidden" name="choiceMade[]" value="makeFieldsMandatory" /> 
+
+</form>
+
+
+
+

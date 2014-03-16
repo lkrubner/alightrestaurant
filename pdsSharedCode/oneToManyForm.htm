@@ -1,0 +1,33 @@
+
+
+<form method="post" action="index.php">
+
+<table>
+
+<tr>
+<td>Many items in this table...  </td>
+<td> ...should belong to one item in this table </td>
+</tr>
+
+<tr>
+	<td>  
+		<select name="manyTable">
+			<option value="">(No choice made)</option>
+			<?php wrapResultsOfSomeFunctionInOptionTags("getListOfAllTables"); ?>
+		</select>
+	</td>
+	<td>
+		<select name="oneTable">
+			<option value="">(No choice made)</option>
+			<?php wrapResultsOfSomeFunctionInOptionTags("getListOfAllTables"); ?>
+		</select>
+	</td>
+</tr>
+
+</table>
+
+
+<p><input type="submit" value="Create relationship" />
+<input type="hidden" name="choiceMade[]" value="createManyToOneRelationship" />
+
+</form>

@@ -1,0 +1,22 @@
+
+<form method="post" action="index.php">
+
+<h3>Forbidden Values</h3>
+
+<p>Add in those values that are forbidden for each field. Commonly forbidden values: an open space like this, " ", 
+should not be in an email field. Likewise, if you have a "price" field that should only be a number, you might
+want to forbid administrators from accidentally adding in a dollar sign "$" before the number.</p>
+
+<p><input type="submit" value="Forbid" /></p>
+
+<?php showAllTables("requirementsForField.htm"); ?>
+
+<p><input type="submit" value="Forbid" /></p>
+<input type="hidden" name="choiceMade[]" value="formatForbiddenValuesForFields" /> 
+<input type="hidden" name="formName" value="showTextForForbiddenValuesForFields" /> 
+
+</form>
+
+
+
+

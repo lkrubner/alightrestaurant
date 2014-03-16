@@ -1,0 +1,506 @@
+#event_choices {
+  width:650px;
+  float:left;
+  padding:6px;
+}
+
+ul {list-style-type:none}
+
+ul#list_of_services {
+  margin:0 0 0 30px;
+}
+
+
+
+
+#clientFormWrapper{
+  position:relative;
+}
+
+
+#prompt_user_with_question {
+  display:none;
+  position:relative;
+  background-color:#ddd;
+  width:1050px;
+  height:1000px;
+  padding:50px;
+}
+
+#askTheTimeForm {
+  display:none;
+  width:400px;
+  height:600px;
+  margin:0 0 0 150px;
+  padding:40px;
+}
+
+#askTheTimeForm ul {
+  width:150px;
+  float:right;
+}
+
+#askTheDayForm {
+  display:none;
+  padding:30px;
+}
+
+#askTheServiceForm {
+  display:none;
+}
+
+
+#send_your_requests_to_us {
+  width:230px;
+  height:27px;
+  font-size:14px;
+  font-weight:bold;
+  background-color:#999;
+  color:#fff;
+}
+
+#askTheRemarksForm {
+  display:none;
+}
+
+textarea.general_remarks {
+  width:400px;
+  height:50px;
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#response_from_the_server {
+  display:none; 
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheScheduleIdForm {
+  display:none;
+  padding: 10px 200px 10px 200px;
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheStartTimeForm {
+  display:none; 
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheSaturdayForm {
+  display:none; 
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheSickDayMessageForm {
+  display:none;
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheEndTimeForm {
+  display:none;
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheRepeatTypeForm {
+  display:none;
+}
+
+
+
+
+
+
+
+
+
+/*
+2009-11-03 - these are styles for this page: 
+http://dev1.teamlalala.com/frontend_dev.php/content/calendar2
+*/
+
+
+
+#mainColumn3 ul li a, 
+#mainColumn3 ul li a:visited, 
+#mainColumn3 ul li a:link, 
+#mainColumn3 ul li a:hover, 
+#mainColumn3 ul li a:active {
+  font-size:14px;
+  font-weight:bold;
+}
+
+
+.a_question_the_user_must_answer {
+  display:none;
+}
+
+
+
+#event_details {
+  width:320px;
+  height:900px;
+  float:right;
+  padding:6px;
+  color: #333;
+}
+
+
+
+
+
+.a_question_the_user_must_answer ul {
+  margin:0 0 0 30px;
+}
+
+
+
+
+#clientFormWrapper{
+  position:relative;
+}
+
+
+#prompt_user_with_question {
+  display:none;
+  position:relative;
+  background-color:#ddd;
+  width:1050px;
+  height:1000px;
+  padding:50px;
+}
+
+
+#askTheDayForm {
+
+}
+
+#askTheServiceForm {
+  display:none;
+}
+
+
+#send_your_requests_to_us {
+  width:230px;
+  height:27px;
+  font-size:14px;
+  font-weight:bold;
+  background-color:#999;
+  color:#fff;
+}
+
+
+textarea.general_remarks {
+  width:290px;
+  height:60px;
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#response_from_the_server {
+  display:none; 
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheScheduleIdForm {
+  display:none;
+  padding: 10px 200px 10px 200px;
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheStartTimeForm {
+  display:none; 
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheSaturdayForm {
+  display:none; 
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheSickDayMessageForm {
+  display:none;
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheEndTimeForm {
+  display:none;
+}
+
+/* in use here: http://dev1.teamlalala.com/frontend_dev.php/content/calendar#  */
+#askTheRepeatTypeForm {
+  display:none;
+}
+
+
+
+#promo {
+  width:220px;
+  text-align:justify;
+  margin:auto;
+}
+
+#addOrCancel {
+  width:220px;
+  margin:auto;
+}
+
+
+.general_remarks {
+  display:none;
+}
+
+#calendar {
+  width: 600px;
+}
+
+ 
+
+
+
+#calendar a, 
+#calendar a:visited, 
+#calendar a:link, 
+#calendar a:hover, 
+#calendar a:active {
+  color:#006;
+}
+
+
+#calendar .canceledEvent a, 
+#calendar .canceledEvent a:visited, 
+#calendar .canceledEvent a:link, 
+#calendar .canceledEvent a:hover, 
+#calendar .canceledEvent a:active {
+  color:#f00;
+  background-color:#fee;
+}
+
+
+ul#listOfMainOptions {
+  margin:0 0 20px 0;
+}
+
+
+ul#listOfMainOptions li { 
+  padding:0 0 0 20px;
+}
+
+
+
+
+
+.canceledEvent {
+  background-color:#fee;
+  color:#f00;
+}
+
+
+
+
+#list_of_services_list {
+  display:none;
+}
+
+
+#list_of_times_list {
+  display:none;
+}
+
+
+#set_the_time_edit_list {
+  display:none;
+}
+
+#setTheServiceList {
+  display:none;
+}
+
+
+
+
+#askTheTimeFormSelect {
+  padding: 0 0 10px 0; 
+  position:relative;
+  z-index:15; 
+}
+
+
+
+#askTheServiceFormSelect {
+  padding: 0 0 10px 0; 
+  position:relative;
+  z-index:20; 
+}
+
+
+#addAdditionalServicesDiv {
+  position:relative;
+  z-index:14; 
+  padding:4px;
+}
+
+
+
+#addAdditionalServicesHolder {
+  display:none;
+}
+
+#extraTimeList {
+  display:none;
+  padding:4px;
+}
+#extraServiceList {
+  display:none;
+  padding:4px;
+}
+
+#askTheRemarksForm {
+  padding: 0 0 10px 0; 
+  position:relative;
+  z-index:12; 
+}
+
+
+#datepickercontainer {
+  padding: 0 0 10px 0; 
+  position:relative;
+  z-index:4; 
+}
+
+
+
+#submitTheForm {
+  position:relative;
+  z-index:9; 
+}
+
+
+
+#send_your_requests_to_us_edit_final {
+  position:relative;
+  z-index:1; 
+}
+
+
+
+#datepickercontainerEdit {
+  position:relative;
+  z-index:2; 
+}
+
+
+
+
+
+#askTheCommentsForm {
+  position:relative;
+  z-index:9; 
+}
+
+
+
+
+#setTheService {
+  padding: 0 0 10px 0; 
+  position:relative;
+  z-index:21; 
+}
+
+
+
+#setTheTime {
+  padding: 0 0 10px 0; 
+  position:relative;
+  z-index:20; 
+}
+
+
+
+
+/* 2010-01-29 - this is the highlight color for the backgrounds
+ in the jQuery datepicker calendar   */
+td.ui-state-active-downtownpet {
+  background-color:#fff;
+}
+td.ui-state-active-downtownpet a.ui-state-default {
+  background:none;
+}
+
+
+#theAddOrEditForm {
+  display:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endTimeList {
+  display:none;
+}
+
+
+#startTimeSleepoverList {
+  display:none;
+}
+
+#sleepoverCommentsDiv {
+
+}
+
+#theSleepoverForm {
+  position:relative; 
+}
+
+#setTheTimeSleepover {
+  position:relative;
+  z-index:10;
+  background-color:#fff;
+  padding:4px;
+}
+
+#endTimeSleepoverDiv {
+  position:relative;
+  z-index:9;
+  background-color:#fff;
+  padding:4px;
+}
+
+#datepickerContainerSleepover {
+  position:relative;
+  z-index:8;
+}
+
+#sleepoverCommentsDiv {
+  position:relative;
+  z-index:7;
+}
+
+#submitSleepoverButton {
+  position:relative;
+  z-index:6;
+}
+
+
+
+
+
+
+.visible_form_area {
+  width: 320px;
+  background-color:#eeeee0;
+  padding: 4px;
+}
+
+
+
+#setTheTime h2 {
+  font-size: 15px;
+}

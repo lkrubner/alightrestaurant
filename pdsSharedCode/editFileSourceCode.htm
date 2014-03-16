@@ -1,0 +1,12 @@
+<form method="post" action="index.php">
+
+<p>Here is the source code of this file: </p>
+
+<textarea name="sourceCode"><?php $controller->command("showSourceCodeOfFile"); ?></textarea>
+
+<p><input type="submit" value="Update source code"></p>
+
+<input type="hidden" name="fileToEdit" value="<?php echo $_GET["fileToEdit"]; ?>" />
+<input type="hidden" name="choiceMade[]" value="updateFile" />
+
+</form>

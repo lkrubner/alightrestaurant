@@ -1,0 +1,22 @@
+<?php $items = $controller->command("databaseFetchSqlWithTrust", "SELECT * FROM lk_proposals_to_book_events order by id", "admin_list_booking_proposals_for_event.htm"); ?>
+ 
+
+
+
+
+<?php echo $controller->command("showUserMessages"); ?>
+
+
+
+<div class="container">
+
+
+<?php foreach($items as $i): ?>
+   <h5><a href="/admin.php?page=admin_edit_proposals_to_book_events&editId=<?php echo $i["id"]; ?>">Subject: <?php echo $i["subject"]; ?></a></h5>
+   <p>What type of email is this: <?php echo $i["what_type_of_email_is_this"]; ?></p>
+   <br>
+<?php endforeach ?>
+
+
+
+</div>

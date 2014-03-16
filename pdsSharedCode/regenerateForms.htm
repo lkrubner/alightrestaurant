@@ -1,0 +1,14 @@
+
+
+
+<form method="post" action="index.php">
+
+	<p>Choose the table whose forms you want regenerated: <br />
+	<select name="nameOfTable">
+		<option value="">(No choice made)</option>
+		<?php wrapResultsOfSomeFunctionInOptionTags("getListOfAllTables"); ?>
+	</select></p>
+
+	<p><input type="submit" value="Regenerate" />
+	<input type="hidden" name="choiceMade[]" value="generateScaffoldingFiles" />
+</form>

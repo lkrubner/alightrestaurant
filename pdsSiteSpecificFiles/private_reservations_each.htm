@@ -1,0 +1,80 @@
+<?php
+
+
+$reservationId = $controller->getVar("reservationId"); 
+
+if(!$reservationId) {
+  $reservationId = $controller->command("currentEditingId", "lk_reservations");
+}
+
+if(!$reservationId):
+  echo "<p>For some reason, we could not figure out which reservation you were trying to see. Please report this bug to us.</p>";
+  $controller->error("For some reason, we could not figure out which reservation you were trying to see. Please report this bug to us.");
+else:
+
+$reservation = $controller->command("rowGetWithTrust", "lk_reservations", $reservationId); 
+
+$occurrence = $controller->command("rowGetWithTrust", "lk_occurrences", $reservation["lk_occurrence_id"]); 
+$occurrenceId = $occurrence["id"];
+
+$dateToBeShown = date('F j, Y', strtotime($reservation['at_what_time_does_the_member_plan_to_arrive']));
+$timeOfSeating = date('l g A', strtotime($reservation['at_what_time_does_the_member_plan_to_arrive']));
+
+?>
+
+
+
+<div class="res">
+<article>
+  <section>
+
+    <div id="guests">
+      <h3>Confirmation</h3>
+
+      <h6>Time</h6>
+      <p>
+	<?php echo $timeOfSeating ?> <br>
+	<?php echo $dateToBeShown ?> </p>
+
+	<?php $thisOccurrenceCourses = $controller->command("databaseGetCoursesForOccurrence", $occurrence['id']); ?>
+
+	<?php foreach($thisOccurrenceCourses as $course): ?>
+	  <h6><?php echo $course['name'] ?></h6>
+
+
+	  <?php $thisCoursesFoods = $controller->command("databaseGetFoodsForCourse", $course['id']);  ?>
+
+	  <?php foreach($thisCoursesFoods as $food): ?>
+  	  <p class="name_of_food"><?php echo $food['name'] ?></p>
+  	  <?php endforeach ?>
+	<?php endforeach ?>
+
+      <?php $arrayOfUsers = $controller->command("databaseGetAllGuestsForThisReservation", $reservation['id']); ?>
+
+
+      <?php if (count($arrayOfUsers) > 0): ?>
+             <h6>Guests: <?php echo $reservation["number_of_guests"]; ?></h6>
+      <?php endif ?>
+      
+    </div>
+
+    <a href="/private.php?page=private_reservations_for_this_member" class="button-custom" style="margin-left:15px;"><span>&laquo; All Reservations</span></a>
+
+
+    <form id="private_reservations_cancel" action="/private.php?page=private_reservations" method="post">
+      <input type="hidden" name="choiceMade[]" value="databaseDeleteReservation">
+      <input type="hidden" name="reservationId" value="<?php echo $reservationId ?>">
+    </form>
+
+    <a href="#" data-id="<?php echo $reservationId ?>" data-action="cancel" class="button-custom btn_right" onclick="document.getElementById('private_reservations_cancel').submit();"><span>Cancel Reservation</span></a>
+
+
+  </section>
+</article>
+</div>
+
+
+
+<?php endif ?>
+
+

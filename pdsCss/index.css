@@ -1,0 +1,268 @@
+body {
+	background-color: #040707;
+	color: #999;
+}
+
+p {
+	text-align: center;
+	line-height: 24px
+}
+
+.center {
+	width:400px;
+	text-align: center;
+  	margin: 20px 0 0 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.inner_logo {
+        width: 300px; 
+  	margin: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+nav {
+        width: 400px; 
+	text-align: center;
+  	margin: 25px 0 25px 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+nav a {
+  color:#fff;
+}
+
+
+
+
+.std #parlor_book_an_event_form input.booking_input {
+width: 400px;
+float: left;
+clear: both;
+margin: 6px;
+}
+.std input.text {
+display: block;
+float: left;
+width: 220px;
+padding: 15px 0;
+text-align: center;
+border-left: solid 1px #515151;
+border-top: solid 1px #515151;
+border-bottom: solid 1px #515151;
+background: #2d2d2d;
+color: #ccc;
+font-size: 14px;
+font-size: 0.7rem;
+font-family: arial,helvetica,verdana,sans-serif;
+letter-spacing: 0.2em;
+}
+
+
+
+.std #parlor_book_an_event_form p {
+font-size: 15px;
+font-family: arial,helvetica,verdana,sans-serif;
+}
+p {
+font: 11px/20px verdana, arial, helvetica, sans-serif;
+margin: 0px 0px 16px 0px;
+padding: 0px;
+}
+.std div.parlor_public_forms {
+text-align: left;
+}
+.std div.mbr {
+text-align: center;
+}
+
+
+.radio_button_and_its_question_text {
+float: left;
+clear: both;
+padding: 0 0 0 30px;
+}
+div.parlor_public_forms
+.std div.parlor_public_forms {
+text-align: left;
+}
+
+.std #parlor_book_an_event_form input.booking_radio {
+width: 20px;
+float: left;
+clear: both;
+margin: 6px;
+}
+
+.indent_this_question {
+float: left;
+clear: both;
+margin: 6px;
+display: block;
+float: left;
+width: 500px;
+padding: 15px 0;
+}
+
+.std div.parlor_public_forms {
+text-align: left;
+}
+
+
+
+.std #parlor_book_an_event_form p {
+font-size: 15px;
+font-family: arial,helvetica,verdana,sans-serif;
+text-align: left;
+}
+
+
+.std #parlor_book_an_event_form .booking_textarea {
+width: 388px;
+height: 140px;
+float: left;
+clear: both;
+margin: 6px;
+padding: 6px;
+border: 1px solid #515151;
+background: #2d2d2d;
+color: #ccc;
+font-size: 0.7rem;
+font-family: arial,helvetica,verdana,sans-serif;
+letter-spacing: 0.2em;
+}
+
+
+a.button-custom {
+position: relative;
+display: inline-block;
+margin: 15px 25px;
+outline: none;
+color: #eee;
+text-decoration: none;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+font-weight: 400;
+text-shadow: 0 0 1px rgba(255,255,255,0.3);
+font-size: 11px;
+}
+
+
+
+footer {
+  margin: 30px 0 0 0;
+  text-align: center;
+}
+
+
+
+#register_form {
+    text-align: left;
+}
+
+
+#register_form p {
+    text-align: left;
+}
+
+
+
+a.button-custom span {
+ padding: 6px; 
+}
+a.button-custom {
+    color: #333;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    margin: 15px 25px;
+    outline: medium none;
+    position: relative;
+    text-decoration: none;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+}
+
+a.button-custom:before {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #FFFFFF;
+    color: #333333;
+    content: attr(data-hover);
+    height: 100%;
+    left: 0;
+    padding: 10px 15px;
+    position: absolute;
+    top: 0;
+    transition: transform 0.3s ease 0s;
+    width: 100%;
+    z-index: -1;
+}
+a.button-custom:after, a.button-custom:before {
+    -moz-box-sizing: border-box;
+}
+a.button-custom:after, a.button-custom:before {
+    -moz-box-sizing: border-box;
+}
+a.button-custom {
+    overflow: hidden;
+}
+a.btn_left {
+    margin-left: 5px;
+}
+a.btn_left {
+    margin-right: 15px;
+}
+a.button-custom {
+ padding: 4px;
+}
+
+
+
+h4 {
+    color: #787878;
+    letter-spacing: 0.1em;
+    line-height: 140%;
+    margin: 4px auto;
+    text-align: center;
+}
+
+
+.available_evenings {
+    font-size: 34px; 
+    padding: 20px;
+    border-style: solid;
+    border-color: #999;
+    border-width: 0 0 1px 0; 
+    width: 400px;
+    margin: 25px auto 0 auto;
+}
+
+
+
+h3.please_tell_us {
+    width:300px;
+    text-align: center;
+    margin: 50px auto 20px auto;
+}
+
+#signup_link{
+    font-size: 24px;
+}
+
+
+
+h6 {
+    font-size: 18px;
+    margin: 25px 2px 2px 2px; 
+}
+
+.name_of_food {
+    padding: 0px 0 16px 25px;
+}
+
+
+

@@ -1,0 +1,78 @@
+
+
+<br style="clear:left"; />
+<br style="clear:left"; />
+
+<div id="custom_forms_options">
+<form method="post" action="profile_form.php?formName=custom_forms.htm">
+	<p><input type="text" name="totalFormInputs[forms_agencies][0][name]" value="Add a new form" id="addNewCustomFormInput" onfocus="document.getElementById('addNewCustomFormInput').value='';" />
+	<input type="submit" value="Create" /></p>
+
+	<input type="hidden" name="choiceMade[]" value="createRecordsForMultipleDatabaseTables" />
+	<input type="hidden" name="totalFormInputs[forms_agencies][0][time]" value="<?php echo time(); ?>" /></p>
+	<input type="hidden" name="totalFormInputs[forms_agencies][0][id_users]" value="<?php echo $controller->command("getIdOfLoggedInUser"); ?>" /></p>
+</form>
+
+<br />
+<br />
+<?php getAllForThisUser("forms_agencies", "forms_agencies_list_each_Form.htm"); ?>
+
+</div>
+
+
+	
+<div id="custom_forms_div"> 
+
+	<?php $controller->command("showUserMessages"); ?>
+
+	<?php if ($controller->getVar("editId")) { ?>
+
+		<?php setEntryForPage("forms_agencies"); ?> 
+
+		<p style="clear:left"; >Add a question to the '<?php currentValue("name"); ?>' form?</p>
+
+		<form id="create_questions_form" method="post" action="custom_forms.php?formName=custom_forms.htm&amp;editId=<?php echo $controller->getVar("editId"); ?>">
+	
+			<p>Type your question <input type="text" name="totalFormInputs[forms_agencies_questions][<?php currentValueForFormArrays("id"); ?>][question]" value="<?php currentValue("question"); ?>" /></p>
+				
+			<br />
+			<p>What kind of answer are you expecting?</p>		
+			<ul>
+				<li>A sentence of text <input type="radio" name="totalFormInputs[forms_agencies_questions][<?php currentValueForFormArrays("id"); ?>][type]" value="varchar" /></li>
+				<li>Paragraphs of text <input type="radio" name="totalFormInputs[forms_agencies_questions][<?php currentValueForFormArrays("id"); ?>][type]" value="text" /></li>
+				<li>A number <input type="radio" name="totalFormInputs[forms_agencies_questions][<?php currentValueForFormArrays("id"); ?>][type]" value="int" /></li>
+				<li>A price <input type="radio" name="totalFormInputs[forms_agencies_questions][<?php currentValueForFormArrays("id"); ?>][type]" value="float" /></li>
+				<li>One of a multiple choice question <input type="radio" name="totalFormInputs[forms_agencies_questions][<?php currentValueForFormArrays("id"); ?>][type]" value="enum" onclick="document.getElementById('possible_answers_div').style.display='block';" /></li>
+			</ul>
+				
+			<br />
+			<div id="possible_answers_div">	
+				<p>Possible answers:</p>
+				<ul id="possible_answers">
+					<li><input type="text" name="possible_answer[]" /></li>
+					<li><input type="text" name="possible_answer[]" /></li>
+					<li><input type="text" name="possible_answer[]" /></li>
+				</ul>	
+				<p><a href="custom_forms.php?formName=custom_forms.htm&amp;editId=<?php echo $controller->getVar("editId"); ?>" onclick="addAnswersToPossibleAnswersList(); return false;">add more answers?</a></p>
+			</div>
+				
+			<p><input type="submit" value="Add Question" /></p>
+			<input type="hidden" name="choiceMade[]" value="addQuestionToCustomForm" />
+		
+		</form>
+
+	<?php } ?>
+</div>
+
+
+<div id="custom_forms_display_actual_form">
+the form
+	<?php if ($controller->getVar("editId")) $controller->command("renderPartial", "forms_agencies_public.htm"); ?>
+
+</div>
+
+
+
+
+
+

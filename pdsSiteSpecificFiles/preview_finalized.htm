@@ -1,0 +1,58 @@
+<?php
+
+if ($controller->arrayOfAllCarriedInfo["preview_choose_a_date_error"] == "true"):
+
+$controller->command("renderPartial", "preview_choose_a_date"); 	
+
+else:  
+
+$reservationId = $controller->getVar("reservationId"); 
+$thisReservation = $controller->command("rowGetWithTrust", "lk_reservations", $reservationId);
+$userId = $thisReservation["user_id"];
+$d = $controller->command("rowGetWithTrust", "lk_occurrences", $thisReservation["lk_occurrence_id"]); 
+
+?>
+
+
+  <article>
+    <section>
+      
+	  <div class="container">
+	    <br>
+	    <?php echo $controller->command("showUserMessages"); ?>  
+	    <br>
+	  </div>
+
+
+
+
+      <?php $dateToBeShown = date('l, F j', strtotime($d['start_day'])); ?>
+
+      <h4><?php echo $dateToBeShown ?></h4>
+
+
+	<h5 data-template="night"><?php echo $dateToBeShown ?></h5>
+
+	<?php $thisOccurrenceCourses = $controller->command("databaseGetCoursesForOccurrence", $d['id']); ?>
+
+	<ul>
+	  <?php foreach($thisOccurrenceCourses as $course): ?>
+	  <li style='font-weight:normal;color:#000;font-family:arial;font-size:11px;margin-top:30px;'><?php echo $course['name'] ?></li>
+
+
+	  <?php $thisCoursesFoods = $controller->command("databaseGetFoodsForCourse", $course['id']);  ?>
+
+	  <?php foreach($thisCoursesFoods as $food): ?>
+  	  <li><?php echo $food['name'] ?></li>
+  	  <?php endforeach ?>
+	  <?php endforeach ?>
+	</ul>
+
+
+
+
+
+    </section>
+  </article>
+
+<?php endif ?>
